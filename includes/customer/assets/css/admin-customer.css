@@ -1,0 +1,29 @@
+.date-range-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.date-range-wrapper input {
+    width: 45%;
+}
+
+.date-range-wrapper span {
+    margin: 0 10px;
+}
+
+.house-list-properties-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.house-list-properties-table th,
+.house-list-properties-table td {
+    text-align: left;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+.house-list-properties-table th {
+    background-color: #f2f2f2;
+}

@@ -1,0 +1,312 @@
+/**
+ * Property Search and Filter Styles
+ */
+
+/* Search and Filter Container */
+.property-search-filters {
+    background: #f9f9f9;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+}
+
+.property-search-filters h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 16px;
+    color: #23282d;
+}
+
+/* Search and Filter Row */
+.search-filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.search-filter-field {
+    flex: 1;
+    min-width: 200px;
+}
+
+.search-filter-field label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.search-filter-field input,
+.search-filter-field select {
+    width: 100%;
+    padding: 6px 10px;
+}
+
+/* Action Buttons */
+.property-action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.property-action-buttons .button {
+    background: #f7f7f7;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.property-action-buttons .button:hover {
+    background: #f0f0f0;
+}
+
+/* Property Count */
+.property-count {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+/* Property List */
+.all-properties-list {
+    max-height: 600px;
+    overflow-y: auto;
+    border: 1px solid #e0e0e0;
+    padding: 10px;
+    background: #fff;
+}
+
+/* Property Item */
+.property-item {
+    margin-bottom: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 3px;
+    background: #fff;
+}
+
+.property-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: #f7f7f7;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.property-title {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    margin: 0;
+    flex: 1;
+}
+
+.property-title input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.title-text {
+    margin-right: 10px;
+}
+
+.toggle-details {
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 3px 8px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.toggle-details:hover {
+    background: #e7e7e7;
+}
+
+/* Property Details */
+.property-details {
+    padding: 15px;
+    background: #fafafa;
+}
+
+.info-group {
+    margin-bottom: 15px;
+}
+
+.info-group-title {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    color: #23282d;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 5px;
+}
+
+.property-info-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.property-info-table th,
+.property-info-table td {
+    padding: 5px;
+    text-align: left;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.property-info-table th {
+    width: 30%;
+    font-weight: 600;
+    color: #666;
+}
+
+/* Match Tags */
+.match-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.match-tag {
+    background: #e7f4e4;
+    color: #2e7d32;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: normal;
+}
+
+/* Deleted Property */
+.deleted-property {
+    opacity: 0.7;
+}
+
+.deleted-label {
+    color: #d32f2f;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.deleted-properties-section {
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px dashed #ccc;
+}
+
+.deleted-properties-section h3 {
+    font-size: 14px;
+    margin-bottom: 10px;
+    color: #666;
+}
+
+/* Property Gallery */
+.property-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.gallery-thumbnail {
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.gallery-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Property Notes */
+.property-notes {
+    background: #f9f9f9;
+    padding: 10px 15px;
+    border-radius: 4px;
+    border-left: 3px solid #2e7d32;
+    margin-top: 5px;
+    line-height: 1.5;
+    font-size: 13px;
+}
+
+/* Full Property Fields Table */
+.all-property-fields {
+    margin-bottom: 20px;
+}
+
+.property-info-table.full-width {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+}
+
+.property-info-table.full-width thead th {
+    background-color: #f0f0f0;
+    text-align: left;
+    padding: 8px 10px;
+    font-weight: bold;
+    border-bottom: 2px solid #ddd;
+}
+
+.property-info-table.full-width tbody th {
+    text-align: left;
+    padding: 8px 10px;
+    font-weight: 600;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+}
+
+.property-info-table.full-width tbody td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #eee;
+    word-break: break-word;
+}
+
+/* Alternar colores para mejor legibilidad */
+.property-info-table.full-width tbody tr:nth-child(odd) {
+    background-color: #fbfbfb;
+}
+
+/* Valores booleanos */
+.value-true {
+    color: #2e7d32;
+    font-weight: 600;
+}
+
+.value-false {
+    color: #c62828;
+}
+
+/* Estilos para contenido JSON */
+.property-info-table.full-width pre {
+    background: #f5f5f5;
+    padding: 5px;
+    overflow-x: auto;
+    margin: 0;
+    font-size: 12px;
+    border-radius: 3px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 782px) {
+    .search-filter-row {
+        flex-direction: column;
+    }
+    
+    .search-filter-field {
+        width: 100%;
+    }
+    
+    .property-action-buttons {
+        flex-direction: column;
+    }
+    
+    .property-action-buttons .button {
+        width: 100%;
+    }
+}

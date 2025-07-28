@@ -1,0 +1,476 @@
+/*
+Theme Name: Houses Theme
+Theme URI: http://example.com/houses-theme/
+Author: Your Name
+Description: An elegant and sophisticated theme for luxury property listings
+Version: 1.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: houses-theme
+*/
+
+/* Modern CSS Reset and Variables */
+:root {
+    --primary-color: #1a1a1a;
+    --secondary-color: #333333;
+    --accent-color: #927545;
+    --text-color: #333333;
+    --light-text: #666666;
+    --background: #ffffff;
+    --light-bg: #f8f8f8;
+    --border-color: #e0e0e0;
+    --card-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+    --transition: all 0.3s ease;
+}
+
+/* Global Styles */
+body {
+    font-family: 'Montserrat', sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background: var(--background);
+    margin: 0;
+    padding: 0;
+}
+
+/* Elegant Header */
+.site-header {
+    background: var(--background);
+    border-bottom: 1px solid var(--border-color);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    padding: 1rem 0;
+}
+
+.site-branding {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.site-title {
+    margin: 0;
+    position: relative;
+    display: inline-block;
+}
+
+.site-title a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 1.8rem;
+    font-weight: 300;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: var(--transition);
+}
+
+/* Sophisticated Navigation */
+.main-navigation {
+    background: var(--background);
+    margin-top: 1rem;
+}
+
+.primary-menu-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.main-navigation ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 3rem;
+    justify-content: flex-end;
+}
+
+.main-navigation a {
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 400;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 0.5rem 0;
+    transition: var(--transition);
+    position: relative;
+}
+
+.main-navigation a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--accent-color);
+    transition: var(--transition);
+}
+
+.main-navigation a:hover::after {
+    width: 100%;
+}
+
+/* Elegant Welcome Banner */
+.welcome-banner {
+    margin-top: 80px;
+    position: relative;
+    padding: 8rem 2rem;
+    text-align: center;
+    background-color: var(--light-bg);
+}
+
+.welcome-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.welcome-content h1 {
+    font-size: 3rem;
+    margin: 0 0 1rem;
+    font-weight: 200;
+    color: var(--primary-color);
+    letter-spacing: 2px;
+}
+
+.welcome-content p {
+    color: var(--light-text);
+    font-size: 1.1rem;
+    font-weight: 300;
+    margin: 0;
+}
+
+/* Property Cards Grid */
+.properties-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 3rem;
+    padding: 4rem 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.property-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: var(--background);
+}
+
+.property-card-image {
+    position: relative;
+    padding-top: 66%;
+    background: var(--light-bg);
+}
+
+.property-card-image img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.property-card-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+}
+
+.property-card-price {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    font-weight: 300;
+    margin-bottom: 1rem;
+    letter-spacing: 1px;
+}
+
+.entry-title {
+    font-size: 1.2rem;
+    margin: 0 0 1.5rem;
+    font-weight: 400;
+}
+
+.entry-title a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.entry-title a:hover {
+    color: var(--accent-color);
+}
+
+.property-card-details {
+    margin-top: auto;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.view-property {
+    display: inline-block;
+    margin-top: 1.5rem;
+    padding: 0.8rem 1.5rem;
+    color: var(--accent-color);
+    text-decoration: none;
+    border: 1px solid var(--accent-color);
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: var(--transition);
+    text-align: center;
+}
+
+.view-property:hover {
+    background: var(--accent-color);
+    color: var(--background);
+}
+
+/* View Details Button */
+.view-details {
+    display: inline-block;
+    margin-top: 2rem;
+    padding: 1rem 2rem;
+    background: var(--background);
+    color: var(--accent-color);
+    text-decoration: none;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border: 1px solid var(--accent-color);
+    transition: var(--transition);
+}
+
+.view-details:hover {
+    background: var(--accent-color);
+    color: var(--background);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .welcome-content h1 {
+        font-size: 2rem;
+    }
+    
+    .properties-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .main-navigation ul {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .property-card-details {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Loading Animation */
+.loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--background);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+.loading::after {
+    content: '';
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--border-color);
+    border-top-color: var(--accent-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Footer Styles */
+.site-footer {
+    background: var(--light-bg);
+    padding: 4rem 0 0;
+    margin-top: 4rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.footer-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4rem;
+}
+
+.footer-branding .footer-title {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    font-weight: 300;
+    margin: 0 0 1rem;
+    letter-spacing: 2px;
+}
+
+.footer-branding .footer-description {
+    color: var(--light-text);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.footer-contact h4 {
+    color: var(--primary-color);
+    font-size: 1rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0 0 1.5rem;
+}
+
+.footer-contact p {
+    color: var(--light-text);
+    font-size: 0.9rem;
+    margin: 0 0 0.5rem;
+}
+
+.footer-menu .footer-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.footer-menu .footer-links li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-menu .footer-links a {
+    color: var(--light-text);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: var(--transition);
+}
+
+.footer-menu .footer-links a:hover {
+    color: var(--accent-color);
+}
+
+.footer-bottom {
+    margin-top: 4rem;
+    padding: 1.5rem 0;
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.copyright {
+    color: var(--light-text);
+    font-size: 0.85rem;
+}
+
+/* Responsive Footer */
+@media (max-width: 768px) {
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        text-align: center;
+    }
+
+    .footer-menu .footer-links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .footer-menu .footer-links li {
+        margin: 0;
+    }
+}
+
+/* WordPress Admin Bar Fix */
+.admin-bar .site-header {
+    top: 32px;
+}
+
+@media screen and (max-width: 782px) {
+    .admin-bar .site-header {
+        top: 46px;
+    }
+}
+
+/* --------------------------------------------------
+   Assignee Public Page Styles
+-------------------------------------------------- */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.assignee-page {
+    padding: 120px 0 60px; /* account for fixed header */
+}
+
+.assignee-name {
+    font-size: 2.4rem;
+    color: var(--primary-color);
+    font-weight: 300;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.assignee-page .section {
+    margin-bottom: 3rem;
+}
+
+.assignee-page .section h2 {
+    font-size: 1.4rem;
+    color: var(--accent-color);
+    border-bottom: 2px solid var(--accent-color);
+    display: inline-block;
+    padding-bottom: 0.3rem;
+    margin-bottom: 1rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.assignee-page ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.assignee-page ul li {
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+    font-size: 0.95rem;
+}
+
+.assignee-page ul li strong {
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .assignee-name {
+        font-size: 1.8rem;
+    }
+}

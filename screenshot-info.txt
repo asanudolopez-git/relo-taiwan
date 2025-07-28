@@ -1,0 +1,3 @@
+Para que el tema aparezca en WordPress, necesitas crear un archivo screenshot.png en este directorio.
+El archivo debe ser una imagen PNG de 1200x900 píxeles que represente tu tema.
+Puedes crear esta imagen con cualquier editor de imágenes y guardarla como "screenshot.png" en este directorio.

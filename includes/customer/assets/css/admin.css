@@ -1,0 +1,251 @@
+.meta-box-section {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+}
+
+.meta-box-section h3 {
+    margin: 0 0 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    color: #23282d;
+}
+
+.meta-box-subsection {
+    margin: 15px 0;
+    padding: 15px;
+    background: #f9f9f9;
+    border: 1px solid #e5e5e5;
+}
+
+.meta-box-subsection h4 {
+    margin: 0 0 15px;
+    color: #23282d;
+    font-size: 13px;
+}
+
+.meta-box-field {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.meta-box-field label {
+    flex: 0 0 200px;
+    margin-right: 15px;
+    font-weight: 600;
+    color: #23282d;
+}
+
+.meta-box-field input[type="text"],
+.meta-box-field select {
+    flex: 1;
+    max-width: 400px;
+}
+
+.meta-box-field textarea {
+    flex: 1;
+    min-height: 100px;
+}
+
+.meta-box-field input[type="text"],
+.meta-box-field select,
+.meta-box-field textarea {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px 8px;
+    width: 100%;
+}
+
+.meta-box-field input[type="text"]:focus,
+.meta-box-field select:focus,
+.meta-box-field textarea:focus {
+    border-color: #2271b1;
+    box-shadow: 0 0 0 1px #2271b1;
+    outline: 2px solid transparent;
+}
+
+.meta-box-field.full-width textarea {
+    max-width: none;
+    width: 100%;
+}
+
+.meta-box-field select[multiple] {
+    min-height: 120px !important;
+    height: auto;
+    padding: 8px;
+}
+
+.meta-box-field select[multiple] option {
+    padding: 6px;
+    margin: 2px 0;
+    border-radius: 3px;
+}
+
+.meta-box-field select[multiple] option:checked {
+    background: linear-gradient(0deg, #2271b1 0%, #2271b1 100%);
+    color: #fff;
+}
+
+.meta-box-field select[multiple] option:hover {
+    background-color: #f0f0f0;
+}
+
+/* Select2 customization */
+.select2-container--default .select2-selection--multiple {
+    min-height: 38px !important;
+    border: 1px solid #ddd !important;
+    border-radius: 4px;
+}
+
+.select2-container--default.select2-container--focus .select2-selection--multiple {
+    border-color: #2271b1 !important;
+    box-shadow: 0 0 0 1px #2271b1;
+    outline: 2px solid transparent;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #2271b1;
+    border: 1px solid #2271b1;
+    color: #fff;
+    border-radius: 2px;
+    padding: 4px 8px;
+    margin: 4px;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+    color: #fff;
+    margin-right: 5px;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
+    color: #fff;
+    background-color: rgba(255,255,255,0.1);
+}
+
+.select2-container--default .select2-search--inline .select2-search__field {
+    margin-top: 3px;
+}
+
+.select2-results__option {
+    padding: 6px 12px;
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #2271b1;
+}
+
+/* Driver's License Upload Styles */
+.license-upload-container {
+    flex: 1;
+    max-width: 100%;
+}
+
+.license-preview {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 15px;
+    background: #f9f9f9;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    position: relative;
+}
+
+.no-license {
+    color: #999;
+    font-style: italic;
+}
+
+.license-image {
+    margin-right: 15px;
+    width: 100px;
+    height: 70px;
+    overflow: hidden;
+    border: 1px solid #ddd;
+    background: #fff;
+}
+
+.license-image img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.license-info {
+    flex: 1;
+}
+
+.license-filename {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.license-view {
+    color: #0073aa;
+    text-decoration: none;
+}
+
+.license-view:hover {
+    color: #00a0d2;
+    text-decoration: underline;
+}
+
+.remove-license {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #a00;
+    text-decoration: none;
+}
+
+.remove-license:hover {
+    color: #dc3232;
+    text-decoration: underline;
+}
+
+.upload-license-button {
+    background: #0073aa;
+    border-color: #0073aa;
+    color: #fff;
+    text-decoration: none;
+    text-shadow: none;
+}
+
+.upload-license-button:hover {
+    background: #00a0d2;
+    border-color: #00a0d2;
+    color: #fff;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 782px) {
+    .meta-box-field {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .meta-box-field label {
+        flex: none;
+        margin-bottom: 5px;
+        margin-right: 0;
+    }
+
+    .meta-box-field input[type="text"],
+    .meta-box-field select {
+        max-width: none;
+    }
+
+    .meta-box-field select[multiple] {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .select2-container {
+        width: 100% !important;
+    }
+}

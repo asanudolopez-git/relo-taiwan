@@ -1,0 +1,147 @@
+/**
+ * Lease Template Admin Styles
+ */
+
+/* Meta Box Styles */
+.houses-meta-box {
+    margin: 15px 0;
+}
+
+.houses-meta-section {
+    margin-bottom: 25px;
+    padding: 0 15px 15px;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+}
+
+.houses-meta-section h3 {
+    padding: 12px 15px;
+    margin: 0 -15px 15px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    background: #f9f9f9;
+}
+
+.houses-meta-box p {
+    display: flex;
+    margin: 1em 0;
+    align-items: flex-start;
+}
+
+.houses-meta-box label {
+    flex: 0 0 200px;
+    font-weight: 600;
+    padding-top: 5px;
+}
+
+.houses-meta-box input[type="text"],
+.houses-meta-box input[type="number"],
+.houses-meta-box textarea {
+    flex: 1;
+    max-width: 400px;
+}
+
+.houses-meta-box .full-width {
+    max-width: 100%;
+}
+
+/* Document Upload Styles */
+.document-upload-container {
+    flex: 1;
+    max-width: 100%;
+}
+
+.document-preview {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 15px;
+    background: #f9f9f9;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    position: relative;
+}
+
+.no-document {
+    color: #999;
+    font-style: italic;
+}
+
+.document-icon {
+    margin-right: 15px;
+}
+
+.document-icon .dashicons {
+    font-size: 36px;
+    width: 36px;
+    height: 36px;
+    color: #0073aa;
+}
+
+.document-info {
+    flex: 1;
+}
+
+.document-filename {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.document-view {
+    color: #0073aa;
+    text-decoration: none;
+}
+
+.document-view:hover {
+    color: #00a0d2;
+    text-decoration: underline;
+}
+
+.remove-document {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #a00;
+    text-decoration: none;
+}
+
+.remove-document:hover {
+    color: #dc3232;
+    text-decoration: underline;
+}
+
+.upload-document-button {
+    background: #0073aa;
+    border-color: #0073aa;
+    color: #fff;
+    text-decoration: none;
+    text-shadow: none;
+}
+
+.upload-document-button:hover {
+    background: #00a0d2;
+    border-color: #00a0d2;
+    color: #fff;
+}
+
+/* Responsive */
+@media screen and (max-width: 782px) {
+    .houses-meta-box p {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .houses-meta-box label {
+        flex: none;
+    }
+
+    .houses-meta-box input[type="text"],
+    .houses-meta-box input[type="number"],
+    .houses-meta-box textarea,
+    .document-upload-container {
+        max-width: 100%;
+    }
+}

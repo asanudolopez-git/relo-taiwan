@@ -1,0 +1,219 @@
+.houses-meta-box {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
+.houses-meta-box h3 {
+    font-size: 1.3em;
+    padding: 10px 0;
+    margin: 20px 0;
+    border-bottom: 2px solid #2271b1;
+    color: #1d2327;
+}
+
+.houses-meta-box p {
+    margin: 15px 0;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.houses-meta-box label {
+    flex: 0 0 150px;
+    font-weight: 600;
+    color: #1d2327;
+}
+
+.houses-meta-box input[type="text"],
+.houses-meta-box input[type="number"],
+.houses-meta-box textarea {
+    flex: 1;
+    max-width: 400px;
+    padding: 8px 12px;
+    border: 1px solid #8c8f94;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #2c3338;
+    font-size: 14px;
+    line-height: 1.4;
+    transition: border-color 0.15s ease-in-out;
+}
+
+.houses-meta-box input[type="text"]:focus,
+.houses-meta-box input[type="number"]:focus,
+.houses-meta-box textarea:focus {
+    border-color: #2271b1;
+    box-shadow: 0 0 0 1px #2271b1;
+    outline: none;
+}
+
+.houses-meta-box input[type="text"].full-width,
+.houses-meta-box textarea.full-width {
+    max-width: 100%;
+}
+
+/* Estilo específico para campos largos */
+.houses-meta-box input[name="address"] {
+    max-width: 100%;
+}
+
+/* Estilo para el área de características */
+.houses-meta-box textarea[name="features"] {
+    min-height: 100px;
+    max-width: 100%;
+}
+
+/* Secciones */
+.houses-meta-section {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+    margin: 20px 0;
+    padding: 20px;
+    border-radius: 4px;
+}
+
+/* Improved Gallery styles */
+.gallery-images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 10px;
+    width: 100%;
+    padding: 15px;
+    background: #f9f9f9;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+}
+
+.gallery-image {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    border: 1px solid #ddd;
+    background: #f7f7f7;
+    padding: 5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border-radius: 3px;
+    transition: all 0.2s ease;
+}
+
+.gallery-image:hover {
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.gallery-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 2px;
+}
+
+.remove-gallery-image {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(255, 0, 0, 0.7);
+    color: white !important;
+    padding: 2px 5px;
+    font-size: 12px;
+    text-decoration: none;
+    border-radius: 3px;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+}
+
+.remove-gallery-image:hover {
+    background: rgba(255, 0, 0, 0.9);
+    color: white !important;
+    opacity: 1;
+    text-decoration: none;
+}
+
+.add-gallery-image {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    height: 150px;
+    border: 2px dashed #ddd;
+    color: #0073aa !important;
+    text-decoration: none !important;
+    font-size: 14px;
+    text-align: center;
+    background: #fff;
+    transition: all 0.2s ease;
+}
+
+.add-gallery-image:hover {
+    border-color: #0073aa;
+    color: #0073aa !important;
+    background: #f0f7fc;
+    text-decoration: none !important;
+}
+
+.add-gallery-image:before {
+    content: "\f502"; /* WordPress dashicons plus icon */
+    font-family: dashicons;
+    font-size: 20px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+.houses-meta-section {
+    margin-bottom: 25px;
+    padding: 0 15px 15px;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+}
+
+.houses-meta-section h3 {
+    padding: 12px 15px;
+    margin: 0 -15px 15px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    background: #f9f9f9;
+}
+
+/* Hide editor toolbar */
+.post-type-property .wp-editor-tools,
+.post-type-property .wp-editor-tabs,
+.post-type-property .mce-toolbar-grp,
+.post-type-property .quicktags-toolbar,
+.post-type-property #wp-content-editor-container .mce-container-body,
+.post-type-property #wp-content-editor-tools {
+    display: none !important;
+}
+
+.post-type-property .wp-editor-container {
+    border: 1px solid #ddd;
+}
+
+.post-type-property .mce-edit-area {
+    border: none !important;
+}
+
+.post-type-property .wp-editor-area {
+    min-height: 200px;
+}
+
+/* Responsive */
+@media screen and (max-width: 782px) {
+    .houses-meta-box p {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .houses-meta-box label {
+        flex: none;
+    }
+
+    .houses-meta-box input[type="text"],
+    .houses-meta-box input[type="number"],
+    .houses-meta-box textarea {
+        max-width: 100%;
+    }
+}

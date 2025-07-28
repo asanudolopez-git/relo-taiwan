@@ -1,0 +1,70 @@
+/* Common admin styles for Houses Theme
+ * Customized checkbox design used across meta boxes.
+ */
+
+.checkbox-field input[type="checkbox"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #8c8f94;
+    border-radius: 4px;
+    background: #ffffff;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.checkbox-field input[type="checkbox"]:hover {
+    border-color: #2271b1;
+}
+
+.checkbox-field input[type="checkbox"]:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(34, 113, 177, 0.35);
+}
+
+.checkbox-field input[type="checkbox"]:checked {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.checkbox-field input[type="checkbox"]:checked::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 6px;
+    width: 4px;
+    height: 9px;
+    border: solid #ffffff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.checkbox-field input[type="checkbox"]:disabled {
+    background: #e9ecef;
+    border-color: #c6cbd1;
+    cursor: not-allowed;
+}
+
+.checkbox-field input[type="checkbox"]:disabled::after {
+    border-color: #adb5bd;
+}
+
+/* Grouping layout: checkbox + completed label + date input */
+.checkbox-field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.checkbox-field .completed-label {
+    font-weight: 600;
+    color: #1d2327;
+}
+
+.checkbox-field input.accommodation-date-field {
+    width: 160px;
+}

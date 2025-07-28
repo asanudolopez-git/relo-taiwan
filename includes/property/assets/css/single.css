@@ -1,0 +1,226 @@
+/* Property Single Styles */
+.property-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 30px;
+}
+
+.property-main {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    padding: 24px;
+}
+
+.property-sidebar {
+    position: sticky;
+    top: 20px;
+    align-self: start;
+}
+
+/* Header */
+.property-header {
+    margin-bottom: 30px;
+}
+
+.property-price {
+    text-align: left;
+}
+
+.property-price h1 {
+    font-size: 32px;
+    font-weight: 500;
+    color: #333;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.property-price p {
+    font-size: 14px;
+    color: #666;
+    margin: 5px 0 0;
+}
+
+/* Gallery */
+.property-gallery {
+    margin-bottom: 40px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.property-gallery img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Content Layout */
+.property-content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Info Sections */
+.info-section {
+    background: #fff;
+    border-radius: 8px;
+    padding: 32px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.info-section h2 {
+    font-size: 20px;
+    font-weight: 500;
+    color: #333;
+    margin: 0 0 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #eee;
+}
+
+.info-section h3 {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    margin: 24px 0 8px;
+}
+
+/* Info Grid */
+.info-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.info-row {
+    display: flex;
+    gap: 24px;
+}
+
+.info-row.two-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.info-item {
+    flex: 1;
+}
+
+.info-item .label {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 4px;
+}
+
+.info-item .value {
+    font-size: 15px;
+    color: #333;
+}
+
+/* Address Section */
+.address-section {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid #eee;
+}
+
+.address-section h3 {
+    margin-top: 0;
+}
+
+.address-section p {
+    font-size: 15px;
+    color: #333;
+    margin: 8px 0 0;
+    line-height: 1.5;
+}
+
+/* Features List */
+.features-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    color: #333;
+}
+
+.feature-item .bullet {
+    color: #0066cc;
+    margin-right: 8px;
+    font-size: 18px;
+}
+
+/* Map */
+.map-container {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #eee;
+}
+
+.map-tabs {
+    display: flex;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    padding: 12px 16px;
+    gap: 16px;
+}
+
+.map-tab {
+    padding: 0;
+    font-size: 14px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #666;
+    font-weight: 500;
+}
+
+.map-tab.active {
+    color: #0066cc;
+}
+
+.property-map {
+    height: 400px;
+    background: #f5f5f5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .property-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .property-sidebar {
+        position: static;
+    }
+    
+    .info-section {
+        padding: 24px;
+    }
+    
+    .info-row.two-columns {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .property-price h1 {
+        font-size: 28px;
+    }
+}
+
+
+.property-single{
+    margin-top: 7rem;   
+}
+
+.property-header{
+    padding: 3rem;
+}

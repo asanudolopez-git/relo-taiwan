@@ -1,0 +1,231 @@
+.meta-box-section {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+}
+
+.meta-box-section h3 {
+    margin-top: 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.meta-box-field {
+    margin-bottom: 15px;
+}
+
+.meta-box-field label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.matching-properties-list {
+    border: none;
+    background: transparent;
+    margin-top: 20px;
+}
+
+.property-item {
+    margin-bottom: 15px;
+    padding: 0;
+    border: 1px solid #e2e4e7;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: box-shadow 0.2s ease;
+}
+
+.property-item:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.property-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #f0f0f0;
+    background: #f8f9fa;
+    border-radius: 8px 8px 0 0;
+}
+
+.property-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e1e1e;
+}
+
+.property-title .title-text {
+    flex: 1;
+}
+
+.property-title input[type="checkbox"] {
+    margin: 0;
+    border-color: #8c8f94;
+}
+
+.match-tags {
+    display: flex;
+    gap: 8px;
+    margin-left: 12px;
+}
+
+.match-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    background: #e9f0fd;
+    color: #2271b1;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 16px;
+}
+
+.toggle-details {
+    padding: 6px 12px;
+    background: #fff;
+    color: #2271b1;
+    border: 1px solid #2271b1;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.toggle-details:hover {
+    background: #2271b1;
+    color: #fff;
+}
+
+.property-details {
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    border-radius: 0 0 8px 8px;
+}
+
+.property-info-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 0;
+}
+
+.property-info-table tr:nth-child(odd) {
+    background-color: #f8f9fa;
+}
+
+.property-info-table th,
+.property-info-table td {
+    padding: 12px 20px;
+    text-align: left;
+    border: none;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.property-info-table th {
+    width: 140px;
+    color: #666;
+    font-weight: 600;
+    background: transparent;
+}
+
+.property-info-table td {
+    color: #1e1e1e;
+}
+
+/* Grupos de información */
+.info-group {
+    border-bottom: 1px solid #f0f0f0;
+    padding: 15px 0;
+}
+
+.info-group:last-child {
+    border-bottom: none;
+}
+
+.info-group-title {
+    font-weight: 600;
+    color: #1e1e1e;
+    margin: 0 20px 10px;
+    font-size: 14px;
+}
+
+/* Diseño responsive */
+@media screen and (max-width: 782px) {
+    .property-header {
+        flex-direction: row;
+        padding: 12px 15px;
+    }
+    
+    .property-title {
+        font-size: 13px;
+        flex-wrap: wrap;
+    }
+    
+    .toggle-details {
+        padding: 4px 10px;
+        font-size: 12px;
+        min-width: 80px;
+        text-align: center;
+    }
+    
+    .match-tags {
+        margin-left: 28px;
+        margin-top: 4px;
+    }
+    
+    .property-info-table th,
+    .property-info-table td {
+        padding: 10px 15px;
+        font-size: 12px;
+    }
+    
+    .property-info-table th {
+        width: 110px;
+    }
+}
+
+.deleted-properties-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px dashed #ddd;
+}
+
+.deleted-properties-section h3 {
+    margin: 0 0 20px;
+    color: #666;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.deleted-property {
+    opacity: 0.8;
+    background: #f8f8f8;
+}
+
+.deleted-property .property-header {
+    background: #f0f0f0;
+}
+
+.deleted-label {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 2px 8px;
+    background: #dc3232;
+    color: #fff;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 16px;
+}

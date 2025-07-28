@@ -1,0 +1,94 @@
+.houses-meta-box {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
+.houses-meta-box h3 {
+    font-size: 1.3em;
+    padding: 10px 0;
+    margin: 20px 0;
+    border-bottom: 2px solid #2271b1;
+    color: #1d2327;
+}
+
+.houses-meta-box p {
+    margin: 15px 0;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.houses-meta-box label {
+    flex: 0 0 150px;
+    font-weight: 600;
+    color: #1d2327;
+}
+
+.houses-meta-box input[type="text"],
+.houses-meta-box input[type="number"],
+.houses-meta-box textarea {
+    flex: 1;
+    max-width: 400px;
+    padding: 8px 12px;
+    border: 1px solid #8c8f94;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #2c3338;
+    font-size: 14px;
+    line-height: 1.4;
+    transition: border-color 0.15s ease-in-out;
+}
+
+.houses-meta-box input[type="text"]:focus,
+.houses-meta-box input[type="number"]:focus,
+.houses-meta-box textarea:focus {
+    border-color: #2271b1;
+    box-shadow: 0 0 0 1px #2271b1;
+    outline: none;
+}
+
+.houses-meta-box input[type="text"].full-width,
+.houses-meta-box textarea.full-width {
+    max-width: 100%;
+}
+
+/* Estilo específico para campos largos */
+.houses-meta-box input[name="address"] {
+    max-width: 100%;
+}
+
+/* Estilo para el área de características */
+.houses-meta-box textarea[name="features"] {
+    min-height: 100px;
+    max-width: 100%;
+}
+
+/* Secciones */
+.houses-meta-section {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+    margin: 20px 0;
+    padding: 20px;
+    border-radius: 4px;
+}
+
+/* Responsive */
+@media screen and (max-width: 782px) {
+    .houses-meta-box p {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .houses-meta-box label {
+        flex: none;
+    }
+
+    .houses-meta-box input[type="text"],
+    .houses-meta-box input[type="number"],
+    .houses-meta-box textarea {
+        max-width: 100%;
+    }
+}

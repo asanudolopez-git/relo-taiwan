@@ -1,0 +1,680 @@
+/* Single Customer Property Display Styles */
+
+/* Property Sections */
+.section.property-chosen,
+.section.house-list-properties {
+    margin-bottom: 3rem;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.section h2 {
+    color: #2c3e50;
+    border-bottom: 3px solid #3498db;
+    padding-bottom: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.section h3 {
+    color: #34495e;
+    margin-bottom: 1.5rem;
+    font-size: 1.4em;
+}
+
+/* Lease Information */
+.lease-info {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 6px;
+    margin-bottom: 2rem;
+}
+
+.lease-info h3 {
+    margin-top: 0;
+    color: #2980b9;
+}
+
+.lease-info ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.lease-info li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #ecf0f1;
+}
+
+.lease-info li:last-child {
+    border-bottom: none;
+}
+
+/* Property Cards */
+.property-card {
+    background: #fff;
+    border: 1px solid #e1e8ed;
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: box-shadow 0.3s ease;
+}
+
+.property-card:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+}
+
+.property-card h3 {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #3498db;
+}
+
+/* Property Gallery */
+.property-gallery {
+    margin-bottom: 2rem;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.gallery-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.05);
+}
+
+.gallery-item a {
+    display: block;
+    text-decoration: none;
+}
+
+/* Property Information Grid */
+.property-info {
+    margin-bottom: 2rem;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border-left: 4px solid #3498db;
+}
+
+.info-item strong {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-item span {
+    color: #34495e;
+    font-size: 1em;
+    line-height: 1.4;
+}
+
+/* Property Description */
+.property-description {
+    margin-top: 2rem;
+}
+
+.property-description h4 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    font-size: 1.2em;
+}
+
+.description-content {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 6px;
+    line-height: 1.6;
+    color: #34495e;
+}
+
+.description-content p {
+    margin-bottom: 1rem;
+}
+
+.description-content p:last-child {
+    margin-bottom: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .section.property-chosen,
+    .section.house-list-properties {
+        padding: 1rem;
+        margin-bottom: 2rem;
+    }
+    
+    .property-card {
+        padding: 1rem;
+    }
+    
+    .gallery-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 0.5rem;
+    }
+    
+    .gallery-item img {
+        height: 150px;
+    }
+    
+    .info-grid {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    
+    .info-item {
+        padding: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .gallery-item img {
+        height: 120px;
+    }
+    
+    .section h2 {
+        font-size: 1.3em;
+    }
+    
+    .property-card h3 {
+        font-size: 1.2em;
+    }
+}
+
+/* Lightbox Enhancement */
+.gallery-item a::after {
+    content: '🔍';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 0.5rem;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    font-size: 1.2em;
+}
+
+.gallery-item:hover a::after {
+    opacity: 1;
+}
+
+/* Status Indicators */
+.info-item[data-status="yes"] {
+    border-left-color: #27ae60;
+}
+
+.info-item[data-status="no"] {
+    border-left-color: #e74c3c;
+}
+
+.info-item[data-status="available"] {
+    border-left-color: #27ae60;
+}
+
+.info-item[data-status="not-available"] {
+    border-left-color: #e74c3c;
+}
+
+/* Services Sections */
+.section.settling-services,
+.section.departure-services,
+.section.extension {
+    margin-bottom: 2rem;
+}
+
+.services-list {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.service-item {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: box-shadow 0.3s ease;
+}
+
+.service-item:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.service-item h4 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    font-size: 1.1em;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 0.5rem;
+}
+
+.service-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 0.75rem;
+}
+
+.service-details p {
+    margin: 0;
+    padding: 0.5rem;
+    background: white;
+    border-radius: 4px;
+    border-left: 3px solid #3498db;
+    font-size: 0.9em;
+}
+
+.service-details strong {
+    color: #2c3e50;
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.8em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.no-services {
+    color: #7f8c8d;
+    font-style: italic;
+    text-align: center;
+    padding: 2rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px dashed #bdc3c7;
+}
+
+/* Closure Services */
+.closure-services {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: #f1f8ff;
+    border-radius: 8px;
+    border: 1px solid #d1ecf1;
+}
+
+.closure-services h5 {
+    color: #0c5460;
+    margin-bottom: 1rem;
+    font-size: 1em;
+    border-bottom: 2px solid #bee5eb;
+    padding-bottom: 0.5rem;
+}
+
+.closure-details {
+    display: grid;
+    gap: 1rem;
+}
+
+.closure-item {
+    background: white;
+    padding: 0.75rem;
+    border-radius: 6px;
+    border-left: 4px solid #17a2b8;
+}
+
+.closure-item strong {
+    color: #0c5460;
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.9em;
+}
+
+.closure-notes {
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    background: #f8f9fa;
+    border-radius: 4px;
+    font-size: 0.85em;
+    color: #495057;
+    font-style: italic;
+}
+
+/* Service Notes */
+.service-notes {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: #fff3cd;
+    border-radius: 8px;
+    border: 1px solid #ffeaa7;
+}
+
+.service-notes h5 {
+    color: #856404;
+    margin-bottom: 1rem;
+    font-size: 1em;
+    border-bottom: 2px solid #ffeaa7;
+    padding-bottom: 0.5rem;
+}
+
+.notes-content {
+    background: white;
+    padding: 1rem;
+    border-radius: 6px;
+    border-left: 4px solid #ffc107;
+    color: #495057;
+    line-height: 1.5;
+}
+
+/* Extension Section */
+.section.extension ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.75rem;
+}
+
+.section.extension li {
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border-left: 4px solid #e67e22;
+}
+
+.section.extension strong {
+    color: #d35400;
+    font-size: 0.9em;
+}
+
+/* Basic Info Section */
+.section.basic-info ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
+.section.basic-info li {
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border-left: 4px solid #3498db;
+}
+
+.section.basic-info strong {
+    color: #2c3e50;
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.section.basic-info a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+.section.basic-info a:hover {
+    text-decoration: underline;
+}
+
+/* Lightbox Styles */
+.property-lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    display: none;
+}
+
+.lightbox-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    cursor: pointer;
+}
+
+.lightbox-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    box-sizing: border-box;
+}
+
+.lightbox-image {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10001;
+}
+
+.lightbox-close:hover {
+    background: #fff;
+    transform: scale(1.1);
+}
+
+.lightbox-prev,
+.lightbox-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-size: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10001;
+}
+
+.lightbox-prev {
+    left: 2rem;
+}
+
+.lightbox-next {
+    right: 2rem;
+}
+
+.lightbox-prev:hover,
+.lightbox-next:hover {
+    background: #fff;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.lightbox-caption {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 25px;
+    font-size: 16px;
+    max-width: 80%;
+    text-align: center;
+}
+
+/* Body class when lightbox is open */
+body.lightbox-open {
+    overflow: hidden;
+}
+
+/* Quick Navigation */
+.property-quick-nav {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    border: 1px solid #e1e8ed;
+}
+
+.property-quick-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.property-quick-nav li {
+    margin: 0;
+}
+
+.property-quick-nav a {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: #3498db;
+    color: white;
+    text-decoration: none;
+    border-radius: 20px;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+}
+
+.property-quick-nav a:hover {
+    background: #2980b9;
+    transform: translateY(-2px);
+}
+
+/* Loading States */
+.gallery-item.loading {
+    position: relative;
+}
+
+.gallery-item.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 30px;
+    height: 30px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Enhanced Mobile Lightbox */
+@media (max-width: 768px) {
+    .lightbox-content {
+        padding: 1rem;
+    }
+    
+    .lightbox-image {
+        max-width: 95%;
+        max-height: 85%;
+    }
+    
+    .lightbox-close {
+        top: 1rem;
+        right: 1rem;
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
+    
+    .lightbox-prev,
+    .lightbox-next {
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+    }
+    
+    .lightbox-prev {
+        left: 1rem;
+    }
+    
+    .lightbox-next {
+        right: 1rem;
+    }
+    
+    .lightbox-caption {
+        bottom: 1rem;
+        padding: 0.75rem 1.5rem;
+        font-size: 14px;
+        max-width: 90%;
+    }
+    
+    .property-quick-nav ul {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .property-quick-nav a {
+        text-align: center;
+    }
+}
