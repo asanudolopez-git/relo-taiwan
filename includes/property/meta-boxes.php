@@ -42,11 +42,6 @@ class Houses_Property_Meta_Boxes
                     'class' => '',
                     'readonly' => true,
                 ),
-                'agent_id' => array(
-                    'label' => 'Agent',
-                    'type' => 'select',
-                    'options' => array(), // Will be populated in constructor
-                ),
                 'metro_line' => array(
                     'label' => 'Metro Line',
                     'type' => 'select',
