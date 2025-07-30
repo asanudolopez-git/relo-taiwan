@@ -21,8 +21,8 @@ class Houses_Accommodation_Meta_Boxes
         'basic_info' => array(
             'title' => 'Settling-In Service Details',
             'fields' => array(
-                'customer_id' => array(
-                    'label' => 'Client',
+                'client_lease_id' => array(
+                    'label' => 'Lease',
                     'type' => 'select',
                     'options' => array(), // Will be populated in constructor
                 ),
@@ -194,7 +194,7 @@ class Houses_Accommodation_Meta_Boxes
     public function __construct()
     {
         // Initialize the select options
-        $this->fields['basic_info']['fields']['customer_id']['options'] = $this->get_customers_options();
+        $this->fields['basic_info']['fields']['client_lease_id']['options'] = $this->get_client_lease_options();
         $this->fields['basic_info']['fields']['property_id']['options'] = $this->get_properties_options();
 
         // Register meta boxes
@@ -203,26 +203,6 @@ class Houses_Accommodation_Meta_Boxes
 
         // Enqueue scripts and styles
         add_action('admin_enqueue_scripts', array($this, 'enqueue_scripts'));
-        // Hide title field on edit screen
-        add_action('admin_head', array($this, 'hide_title_field'));
-    }
-
-    /**
-     * Hide the title field and editor on customer edit screen
-     */
-    public function hide_title_field()
-    {
-        global $current_screen;
-        if (!empty($current_screen) && $current_screen->post_type === 'accommodation') {
-            echo '<style type="text/css">
-                #titlediv { display: none !important; }
-                #postdivrich { display: none !important; }
-                #wp-content-editor-tools { display: none !important; }
-                .wp-editor-area { display: none !important; }
-                #wp-content-editor-container { display: none !important; }
-                #ed_toolbar { display: none !important; }
-            </style>';
-        }
     }
 
     /**
@@ -459,21 +439,21 @@ class Houses_Accommodation_Meta_Boxes
     }
 
     /**
-     * Get customers for select options
+     * Get Client Leases for select options
      */
-    public function get_customers_options()
+    public function get_client_lease_options()
     {
-        $options = array('' => __('Select Client', 'houses-theme'));
+        $options = array('' => __('Select Lease Summary', 'houses-theme'));
 
-        $customers = get_posts(array(
-            'post_type' => 'customer',
+        $client_leases = get_posts(array(
+            'post_type' => 'client_lease',
             'posts_per_page' => -1,
             'orderby' => 'title',
             'order' => 'ASC'
         ));
 
-        foreach ($customers as $customer) {
-            $options[$customer->ID] = $customer->post_title;
+        foreach ($client_leases as $client_lease) {
+            $options[$client_lease->ID] = $client_lease->post_title;
         }
 
         return $options;
