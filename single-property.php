@@ -33,7 +33,8 @@ get_header();
                             <div class="info-item">
                                 <div class="label">Property ID</div>
                                 <div class="value">
-                                    <?php echo esc_html(get_post_meta(get_the_ID(), 'property_id', true)); ?></div>
+                                    <?php echo esc_html(get_post_meta(get_the_ID(), 'property_id', true)); ?>
+                                </div>
                             </div>
                         </div>
 
@@ -46,7 +47,8 @@ get_header();
                             <div class="info-item">
                                 <div class="label">Gross Size</div>
                                 <div class="value">
-                                    <?php echo esc_html(get_post_meta(get_the_ID(), 'gross_size', true)); ?></div>
+                                    <?php echo esc_html(get_post_meta(get_the_ID(), 'gross_size', true)); ?>
+                                </div>
                             </div>
                         </div>
 
@@ -54,7 +56,8 @@ get_header();
                             <div class="info-item">
                                 <div class="label">Net Size</div>
                                 <div class="value">
-                                    <?php echo esc_html(get_post_meta(get_the_ID(), 'net_size', true)); ?></div>
+                                    <?php echo esc_html(get_post_meta(get_the_ID(), 'net_size', true)); ?>
+                                </div>
                             </div>
                             <div class="info-item">
                                 <div class="label">MRT</div>
@@ -67,7 +70,8 @@ get_header();
                             <div class="info-item">
                                 <div class="label">Property Type</div>
                                 <div class="value">
-                                    <?php echo esc_html(get_post_meta(get_the_ID(), 'property_type', true)); ?></div>
+                                    <?php echo esc_html(get_post_meta(get_the_ID(), 'property_type', true)); ?>
+                                </div>
                             </div>
                             <div class="info-item">
                                 <div class="label">Floor</div>
@@ -80,7 +84,8 @@ get_header();
                             <div class="info-item">
                                 <div class="label">Elevator</div>
                                 <div class="value">
-                                    <?php echo esc_html(get_post_meta(get_the_ID(), 'elevator', true)); ?></div>
+                                    <?php echo esc_html(get_post_meta(get_the_ID(), 'elevator', true)); ?>
+                                </div>
                             </div>
                             <div class="info-item">
                                 <div class="label">Parking</div>
@@ -106,12 +111,14 @@ get_header();
                             <div class="info-item">
                                 <div class="label">Concierge</div>
                                 <div class="value">
-                                    <?php echo esc_html(get_post_meta(get_the_ID(), 'concierge', true)); ?></div>
+                                    <?php echo esc_html(get_post_meta(get_the_ID(), 'concierge', true)); ?>
+                                </div>
                             </div>
                             <div class="info-item">
                                 <div class="label">Maid's Room</div>
                                 <div class="value">
-                                    <?php echo esc_html(get_post_meta(get_the_ID(), 'maids_room', true)); ?></div>
+                                    <?php echo esc_html(get_post_meta(get_the_ID(), 'maids_room', true)); ?>
+                                </div>
                             </div>
                         </div>
 
@@ -124,7 +131,8 @@ get_header();
                             <div class="info-item">
                                 <div class="label">Open Kitchen</div>
                                 <div class="value">
-                                    <?php echo esc_html(get_post_meta(get_the_ID(), 'open_kitchen', true)); ?></div>
+                                    <?php echo esc_html(get_post_meta(get_the_ID(), 'open_kitchen', true)); ?>
+                                </div>
                             </div>
                         </div>
 
@@ -138,7 +146,8 @@ get_header();
                             <div class="info-item">
                                 <div class="label">Legal Use</div>
                                 <div class="value">
-                                    <?php echo esc_html(get_post_meta(get_the_ID(), 'legal_use', true)); ?></div>
+                                    <?php echo esc_html(get_post_meta(get_the_ID(), 'legal_use', true)); ?>
+                                </div>
                             </div>
                         </div>
 
@@ -194,18 +203,6 @@ get_header();
                     </section>
                 <?php endif; ?>
             </div>
-        </div>
-
-        <div class="property-sidebar">
-            <?php
-            // Get the agent ID from property meta
-            $agent_id = get_post_meta(get_the_ID(), 'agent_id', true);
-
-            // If there's an agent assigned, display the agent card
-            if ($agent_id) {
-                get_template_part('includes/agent/template-parts/agent-card', null, array('agent_id' => $agent_id));
-            }
-            ?>
         </div>
     </div>
 </div>
