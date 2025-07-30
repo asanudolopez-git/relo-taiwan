@@ -1,5 +1,6 @@
 <?php
-function register_customer_house_list_post_type() {
+function register_customer_house_list_post_type()
+{
     $labels = array(
         'name' => __('Assignee House Lists', 'houses-theme'),
         'singular_name' => __('Assignee House List', 'houses-theme'),
@@ -33,7 +34,8 @@ function register_customer_house_list_post_type() {
 add_action('init', 'register_customer_house_list_post_type');
 
 // Change the title placeholder
-function change_customer_house_list_title_placeholder($title_placeholder) {
+function change_customer_house_list_title_placeholder($title_placeholder)
+{
     $screen = get_current_screen();
     if ($screen && $screen->post_type === 'customer-house-list') {
         $title_placeholder = 'List Name';
@@ -42,15 +44,46 @@ function change_customer_house_list_title_placeholder($title_placeholder) {
 }
 add_filter('enter_title_here', 'change_customer_house_list_title_placeholder');
 
+function auto_generate_house_list_title($post_id)
+{
+    // Avoid autosave loops and revisions
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
+        return;
+    if (wp_is_post_revision($post_id))
+        return;
+
+    $post = get_post($post_id);
+    if ($post->post_type !== 'customer-house-list')
+        return;
+
+    // Only set title if it's empty
+    if (empty($post->post_title)) {
+        // Prevent infinite loop
+        remove_action('save_post', 'auto_generate_house_list_title');
+
+        // Update the title
+        wp_update_post([
+            'ID' => $post_id,
+            'post_title' => 'Property List #' . $post_id,
+        ]);
+
+        // Re-add the hook
+        add_action('save_post', 'auto_generate_house_list_title');
+    }
+}
+add_action('save_post', 'auto_generate_house_list_title');
+
+
 /**
  * Register scripts and styles for the customer house list
  */
-function register_customer_house_list_scripts($hook) {
+function register_customer_house_list_scripts($hook)
+{
     if (is_admin()) {
         // Verificar si estamos en la página de edición del customer-house-list
         global $post_type, $pagenow, $post;
         $current_post_type = '';
-        
+
         if ($pagenow == 'post.php' && isset($_GET['post'])) {
             $current_post_type = get_post_type($_GET['post']);
         } elseif ($pagenow == 'post-new.php' && isset($_GET['post_type'])) {
@@ -58,11 +91,11 @@ function register_customer_house_list_scripts($hook) {
         } elseif (isset($post) && is_object($post)) {
             $current_post_type = $post->post_type;
         }
-        
+
         if ($current_post_type == 'customer-house-list') {
             // Registrar y cargar jQuery primero para asegurar que esté disponible
             wp_enqueue_script('jquery');
-            
+
             // Registrar y cargar el script principal con versión aleatoria para evitar caché
             wp_enqueue_script(
                 'property-search-js',
@@ -71,7 +104,7 @@ function register_customer_house_list_scripts($hook) {
                 rand(1000, 9999),
                 false // Cargar en el head para asegurar que esté disponible antes de cargar la página
             );
-            
+
             // Registrar y cargar los estilos
             wp_enqueue_style(
                 'property-search-css',
@@ -79,7 +112,7 @@ function register_customer_house_list_scripts($hook) {
                 array(),
                 rand(1000, 9999)
             );
-            
+
             // Registrar y cargar el script para exportación PDF
             wp_enqueue_script(
                 'pdf-export-js',
@@ -88,14 +121,14 @@ function register_customer_house_list_scripts($hook) {
                 rand(1000, 9999),
                 false
             );
-            
+
             // Localizar el script con datos necesarios para AJAX
             wp_localize_script(
                 'pdf-export-js',
                 'ClientHouseListPDF',
                 array(
                     'ajax_url' => admin_url('admin-ajax.php'),
-                    'nonce'    => wp_create_nonce('generate_customer_house_list_pdf_nonce')
+                    'nonce' => wp_create_nonce('generate_customer_house_list_pdf_nonce')
                 )
             );
         }
