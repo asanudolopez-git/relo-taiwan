@@ -379,7 +379,7 @@ class Houses_Client_Meta_Boxes
         }
 
         echo '<table class="house-list-properties-table">';
-        echo '<thead><tr><th>House List</th><th>Title</th><th>Property ID</th><th>Address</th><th>Price</th><th>Gross Size</th><th>Layout</th></tr></thead>';
+        echo '<thead><tr><th>House List</th><th>Title</th><th>Property ID</th><th>Address</th><th>Rent</th><th>Square Meters</th><th>Type</th></tr></thead>';
         echo '<tbody>';
 
         $has_properties = false;
@@ -413,10 +413,10 @@ class Houses_Client_Meta_Boxes
                         }
                         echo '</td>';
                         echo '<td>' . esc_html($property_id) . '</td>';
-                        echo '<td>' . esc_html($property_meta['address'][0] ?? '') . '</td>';
-                        echo '<td>NT$ ' . esc_html(number_format_i18n(floatval($property_meta['price'][0] ?? 0))) . '</td>';
-                        echo '<td>' . esc_html($property_meta['gross_size'][0] ?? '') . '</td>';
-                        echo '<td>' . esc_html($property_meta['layout'][0] ?? '') . '</td>';
+                        echo '<td>' . esc_html($property_meta['address'][0] ?? '') . '(' . esc_html($property_meta['chinese_address'][0] ?? '') . ')' . '</td>';
+                        echo '<td>NT$ ' . esc_html(number_format_i18n(floatval($property_meta['rent'][0] ?? 0))) . '</td>';
+                        echo '<td>' . esc_html($property_meta['square_meters'][0] ?? '') . '</td>';
+                        echo '<td>' . esc_html($property_meta['property_type'][0] ?? '') . '</td>';
                         echo '</tr>';
                     }
                 }
