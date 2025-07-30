@@ -12,7 +12,8 @@ if (!defined('ABSPATH')) {
 /**
  * Class Houses_Accommodation_Meta_Boxes
  */
-class Houses_Accommodation_Meta_Boxes {
+class Houses_Accommodation_Meta_Boxes
+{
     /**
      * Meta box fields configuration
      */
@@ -190,32 +191,54 @@ class Houses_Accommodation_Meta_Boxes {
     /**
      * Constructor
      */
-    public function __construct() {
+    public function __construct()
+    {
         // Initialize the select options
         $this->fields['basic_info']['fields']['customer_id']['options'] = $this->get_customers_options();
         $this->fields['basic_info']['fields']['property_id']['options'] = $this->get_properties_options();
-        
+
         // Register meta boxes
         add_action('add_meta_boxes', array($this, 'register_meta_boxes'));
         add_action('save_post', array($this, 'save_meta_boxes'));
-        
+
         // Enqueue scripts and styles
         add_action('admin_enqueue_scripts', array($this, 'enqueue_scripts'));
+        // Hide title field on edit screen
+        add_action('admin_head', array($this, 'hide_title_field'));
+    }
+
+    /**
+     * Hide the title field and editor on customer edit screen
+     */
+    public function hide_title_field()
+    {
+        global $current_screen;
+        if (!empty($current_screen) && $current_screen->post_type === 'accommodation') {
+            echo '<style type="text/css">
+                #titlediv { display: none !important; }
+                #postdivrich { display: none !important; }
+                #wp-content-editor-tools { display: none !important; }
+                .wp-editor-area { display: none !important; }
+                #wp-content-editor-container { display: none !important; }
+                #ed_toolbar { display: none !important; }
+            </style>';
+        }
     }
 
     /**
      * Enqueue admin scripts and styles
      */
-    public function enqueue_scripts($hook) {
+    public function enqueue_scripts($hook)
+    {
         global $post;
-        
+
         if ($hook == 'post-new.php' || $hook == 'post.php') {
             if (isset($post) && 'accommodation' === $post->post_type) {
                 wp_enqueue_script('jquery-ui-datepicker');
-                
+
                 // Cargar los estilos de jQuery UI para el datepicker
                 wp_enqueue_style('jquery-ui-style', 'https://code.jquery.com/ui/1.13.2/themes/smoothness/jquery-ui.css', array(), '1.13.2');
-                
+
                 // Add custom styles
                 wp_add_inline_style('jquery-ui-style', '
                     .accommodation-meta-box-container {
@@ -245,7 +268,7 @@ class Houses_Accommodation_Meta_Boxes {
                         margin-right: 8px;
                     }
                 ');
-                
+
                 // Add datepicker initialization
                 wp_add_inline_script('jquery-ui-datepicker', '
                     jQuery(document).ready(function($) {
@@ -263,7 +286,8 @@ class Houses_Accommodation_Meta_Boxes {
     /**
      * Register meta boxes
      */
-    public function register_meta_boxes() {
+    public function register_meta_boxes()
+    {
         // Register a separate meta box for each section so they appear as individual boxes
         foreach ($this->fields as $section_id => $section) {
             add_meta_box(
@@ -284,7 +308,8 @@ class Houses_Accommodation_Meta_Boxes {
      * @param WP_Post $post The post object.
      * @param array   $metabox Metabox callback arguments.
      */
-    public function render_section_meta_box($post, $metabox) {
+    public function render_section_meta_box($post, $metabox)
+    {
         $section_id = isset($metabox['args']['section_id']) ? $metabox['args']['section_id'] : '';
         if (!$section_id || !isset($this->fields[$section_id])) {
             return;
@@ -301,8 +326,8 @@ class Houses_Accommodation_Meta_Boxes {
 
         $checkbox_date_pairs = array(
             'intro_consultation_call' => 'intro_consultation_call_date',
-            'lease_signed'           => 'lease_signed_completed_at',
-            'check_in'               => 'check_in_completed_at',
+            'lease_signed' => 'lease_signed_completed_at',
+            'check_in' => 'check_in_completed_at',
         );
         $skip_fields = array();
 
@@ -313,7 +338,7 @@ class Houses_Accommodation_Meta_Boxes {
 
             // Group checkbox + date input when mapping exists
             if (isset($checkbox_date_pairs[$field_id])) {
-                $date_field_id   = $checkbox_date_pairs[$field_id];
+                $date_field_id = $checkbox_date_pairs[$field_id];
                 $date_field_conf = $this->fields[$section_id]['fields'][$date_field_id];
 
                 echo '<div class="accommodation-meta-box-field checkbox-group">';
@@ -352,9 +377,10 @@ class Houses_Accommodation_Meta_Boxes {
     /**
      * Render meta box
      */
-    public function render_meta_box($post) {
+    public function render_meta_box($post)
+    {
         wp_nonce_field('houses_accommodation_details', 'houses_accommodation_details_nonce');
-        
+
         // Get all field values
         $values = array();
         foreach ($this->fields as $section) {
@@ -362,31 +388,32 @@ class Houses_Accommodation_Meta_Boxes {
                 $values[$field_id] = get_post_meta($post->ID, $field_id, true);
             }
         }
-        
+
         // Output fields
         echo '<div class="accommodation-meta-box-container">';
-        
+
         foreach ($this->fields as $section_id => $section) {
             echo '<h3>' . esc_html($section['title']) . '</h3>';
-            
+
             foreach ($section['fields'] as $field_id => $field) {
                 $field['id'] = $field_id;
                 $class = isset($field['class']) ? $field['class'] : '';
-                
+
                 echo '<div class="accommodation-meta-box-field ' . esc_attr($class) . '">';
                 echo '<label for="' . esc_attr($field_id) . '">' . esc_html($field['label']) . '</label>';
                 $this->render_field($field, $values[$field_id]);
                 echo '</div>';
             }
         }
-        
+
         echo '</div>';
     }
 
     /**
      * Save meta box content
      */
-    public function save_meta_boxes($post_id) {
+    public function save_meta_boxes($post_id)
+    {
         // Check if our nonce is set
         if (!isset($_POST['houses_accommodation_details_nonce'])) {
             return;
@@ -428,9 +455,10 @@ class Houses_Accommodation_Meta_Boxes {
     /**
      * Get customers for select options
      */
-    public function get_customers_options() {
+    public function get_customers_options()
+    {
         $options = array('' => __('Select Client', 'houses-theme'));
-        
+
         $customers = get_posts(array(
             'post_type' => 'customer',
             'posts_per_page' => -1,
@@ -448,9 +476,10 @@ class Houses_Accommodation_Meta_Boxes {
     /**
      * Get properties for select options
      */
-    public function get_properties_options() {
+    public function get_properties_options()
+    {
         $options = array('' => __('Select Property', 'houses-theme'));
-        
+
         $properties = get_posts(array(
             'post_type' => 'property',
             'posts_per_page' => -1,
@@ -468,15 +497,13 @@ class Houses_Accommodation_Meta_Boxes {
     /**
      * Render field
      */
-    private function render_field($field, $value) {
+    private function render_field($field, $value)
+    {
         switch ($field['type']) {
             case 'text':
                 ?>
-                <input type="text" 
-                       id="<?php echo esc_attr($field['id']); ?>" 
-                       name="<?php echo esc_attr($field['id']); ?>" 
-                       value="<?php echo esc_attr($value); ?>" 
-                       class="widefat">
+                <input type="text" id="<?php echo esc_attr($field['id']); ?>" name="<?php echo esc_attr($field['id']); ?>"
+                    value="<?php echo esc_attr($value); ?>" class="widefat">
                 <?php
                 break;
 
@@ -484,34 +511,24 @@ class Houses_Accommodation_Meta_Boxes {
                 $step = isset($field['step']) ? $field['step'] : '1';
                 $min = isset($field['min']) ? $field['min'] : '';
                 ?>
-                <input type="number" 
-                       id="<?php echo esc_attr($field['id']); ?>" 
-                       name="<?php echo esc_attr($field['id']); ?>" 
-                       value="<?php echo esc_attr($value); ?>" 
-                       step="<?php echo esc_attr($step); ?>"
-                       min="<?php echo esc_attr($min); ?>"
-                       class="widefat">
+                <input type="number" id="<?php echo esc_attr($field['id']); ?>" name="<?php echo esc_attr($field['id']); ?>"
+                    value="<?php echo esc_attr($value); ?>" step="<?php echo esc_attr($step); ?>" min="<?php echo esc_attr($min); ?>"
+                    class="widefat">
                 <?php
                 break;
 
             case 'date':
                 ?>
-                <input type="text" 
-                       id="<?php echo esc_attr($field['id']); ?>" 
-                       name="<?php echo esc_attr($field['id']); ?>" 
-                       value="<?php echo esc_attr($value); ?>" 
-                       class="widefat accommodation-date-field">
+                <input type="text" id="<?php echo esc_attr($field['id']); ?>" name="<?php echo esc_attr($field['id']); ?>"
+                    value="<?php echo esc_attr($value); ?>" class="widefat accommodation-date-field">
                 <?php
                 break;
 
             case 'select':
                 ?>
-                <select id="<?php echo esc_attr($field['id']); ?>" 
-                        name="<?php echo esc_attr($field['id']); ?>" 
-                        class="widefat">
-                    <?php foreach ($field['options'] as $option_value => $option_label) : ?>
-                        <option value="<?php echo esc_attr($option_value); ?>" 
-                                <?php selected($value, $option_value); ?>>
+                <select id="<?php echo esc_attr($field['id']); ?>" name="<?php echo esc_attr($field['id']); ?>" class="widefat">
+                    <?php foreach ($field['options'] as $option_value => $option_label): ?>
+                        <option value="<?php echo esc_attr($option_value); ?>" <?php selected($value, $option_value); ?>>
                             <?php echo esc_html($option_label); ?>
                         </option>
                     <?php endforeach; ?>
@@ -521,21 +538,16 @@ class Houses_Accommodation_Meta_Boxes {
 
             case 'textarea':
                 ?>
-                <textarea id="<?php echo esc_attr($field['id']); ?>" 
-                          name="<?php echo esc_attr($field['id']); ?>" 
-                          class="widefat" 
-                          rows="4"><?php echo esc_textarea($value); ?></textarea>
+                <textarea id="<?php echo esc_attr($field['id']); ?>" name="<?php echo esc_attr($field['id']); ?>" class="widefat"
+                    rows="4"><?php echo esc_textarea($value); ?></textarea>
                 <?php
                 break;
 
             case 'checkbox':
                 ?>
                 <div class="checkbox-field 0">
-                    <input type="checkbox" 
-                           id="<?php echo esc_attr($field['id']); ?>" 
-                           name="<?php echo esc_attr($field['id']); ?>" 
-                           value="1" 
-                           <?php checked($value, '1'); ?>>
+                    <input type="checkbox" id="<?php echo esc_attr($field['id']); ?>" name="<?php echo esc_attr($field['id']); ?>"
+                        value="1" <?php checked($value, '1'); ?>>
                     <span class="checkbox-label"><?php _e('Yes', 'houses-theme'); ?></span>
                 </div>
                 <?php
