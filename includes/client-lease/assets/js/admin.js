@@ -53,13 +53,25 @@ jQuery(document).ready(function($) {
     
     // Handle client selection change
     $clientSelect.on('change', function() {
+        const titleInput = $('#title');
         const clientId = $(this).val();
+        const selectedOption = $(this).find('option:selected');
+        const clientName = selectedOption.text();
+        if (clientName && clientName !== '') {
+            titleInput.val(clientName);
+        }
         loadPropertiesForClient(clientId);
     });
     
     // Handle property selection change - update hidden input
     $propertySelect.on('change', function() {
         const propertyId = $(this).val();
+        const titleInput = $('#title');
+        const selectedOption = $(this).find('option:selected');
+        const propertyName = selectedOption.text();
+        if (propertyName && propertyName !== '') {
+            titleInput.val(titleInput.val() + '-' + propertyName);
+        }
         $('#property_id_hidden').val(propertyId);
         console.log('Property selected:', propertyId, 'Hidden input updated');
     });
