@@ -44,6 +44,36 @@ function change_customer_house_list_title_placeholder($title_placeholder)
 }
 add_filter('enter_title_here', 'change_customer_house_list_title_placeholder');
 
+function auto_generate_house_list_title($post_id)
+{
+    // Avoid autosave loops and revisions
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
+        return;
+    if (wp_is_post_revision($post_id))
+        return;
+
+    $post = get_post($post_id);
+    if ($post->post_type !== 'customer-house-list')
+        return;
+
+    // Only set title if it's empty
+    if (empty($post->post_title)) {
+        // Prevent infinite loop
+        remove_action('save_post', 'auto_generate_house_list_title');
+
+        // Update the title
+        wp_update_post([
+            'ID' => $post_id,
+            'post_title' => 'Property List #' . $post_id,
+        ]);
+
+        // Re-add the hook
+        add_action('save_post', 'auto_generate_house_list_title');
+    }
+}
+add_action('save_post', 'auto_generate_house_list_title');
+
+
 /**
  * Register scripts and styles for the customer house list
  */
