@@ -400,26 +400,10 @@ class accommodation_Meta_Boxes
      */
     public function save_meta_boxes($post_id)
     {
-        // Check if our nonce is set
-        if (!isset($_POST['accommodation_details_nonce'])) {
-            return;
-        }
-
-        // Verify that the nonce is valid
-        if (!wp_verify_nonce($_POST['accommodation_details_nonce'], 'accommodation_details')) {
-            return;
-        }
-
-        // If this is an autosave, our form has not been submitted, so we don't want to do anything
-        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
-            return;
-        }
-
         // Check the user's permissions
         if (!current_user_can('edit_post', $post_id)) {
             return;
         }
-
         // Save all fields
         foreach ($this->fields as $section) {
             foreach ($section['fields'] as $field_id => $field) {
