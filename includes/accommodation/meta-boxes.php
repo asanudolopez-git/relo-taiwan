@@ -268,7 +268,13 @@ class Houses_Accommodation_Meta_Boxes
                         margin-right: 8px;
                     }
                 ');
-
+                wp_enqueue_script(
+                    'accomodation-admin',
+                    get_template_directory_uri() . '/includes/accommodation/assets/js/admin.js',
+                    array('jquery'),
+                    '1.0.0',
+                    true
+                );
                 // Add datepicker initialization
                 wp_add_inline_script('jquery-ui-datepicker', '
                     jQuery(document).ready(function($) {
