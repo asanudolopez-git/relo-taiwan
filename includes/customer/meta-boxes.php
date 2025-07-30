@@ -1,6 +1,7 @@
 <?php
 
-class Houses_Client_Meta_Boxes {
+class Houses_Client_Meta_Boxes
+{
     /**
      * Meta box fields configuration
      */
@@ -170,20 +171,22 @@ class Houses_Client_Meta_Boxes {
     /**
      * Constructor
      */
-    public function __construct() {
+    public function __construct()
+    {
         add_action('add_meta_boxes', array($this, 'add_meta_boxes'));
         add_action('save_post', array($this, 'save_meta_boxes'));
         add_action('admin_enqueue_scripts', array($this, 'enqueue_scripts'));
         add_action('admin_init', array($this, 'populate_select_options'));
-        
+
         // Hide title field on edit screen
         add_action('admin_head', array($this, 'hide_title_field'));
     }
-    
+
     /**
      * Hide the title field and editor on customer edit screen
      */
-    public function hide_title_field() {
+    public function hide_title_field()
+    {
         global $current_screen;
         if (!empty($current_screen) && $current_screen->post_type === 'customer') {
             echo '<style type="text/css">
@@ -196,11 +199,12 @@ class Houses_Client_Meta_Boxes {
             </style>';
         }
     }
-    
+
     /**
      * Populate company dropdown options
      */
-    public function populate_select_options() {
+    public function populate_select_options()
+    {
         // Get all companies
         $companies = get_posts(array(
             'post_type' => 'company',
@@ -208,10 +212,10 @@ class Houses_Client_Meta_Boxes {
             'orderby' => 'title',
             'order' => 'ASC',
         ));
-        
+
         // Add empty option
         $this->fields['basic_info']['fields']['company_id']['options'] = array('' => 'Select Company');
-        
+
         // Add companies to dropdown
         foreach ($companies as $company) {
             $this->fields['basic_info']['fields']['company_id']['options'][$company->ID] = $company->post_title;
@@ -224,9 +228,10 @@ class Houses_Client_Meta_Boxes {
     /**
      * Get stations for select options
      */
-    public function get_stations_options() {
+    public function get_stations_options()
+    {
         $options = array('' => __('Select Station', 'houses-theme'));
-        
+
         $stations = get_posts(array(
             'post_type' => 'station',
             'posts_per_page' => -1,
@@ -244,9 +249,10 @@ class Houses_Client_Meta_Boxes {
     /**
      * Enqueue scripts and styles
      */
-    public function enqueue_scripts($hook) {
+    public function enqueue_scripts($hook)
+    {
         global $post;
-        
+
         if (($hook == 'post-new.php' || $hook == 'post.php') && isset($post) && $post->post_type === 'customer') {
             // Enqueue custom admin styles
             wp_enqueue_style(
@@ -258,7 +264,7 @@ class Houses_Client_Meta_Boxes {
 
             // Enqueue media uploader
             wp_enqueue_media();
-            
+
             // Enqueue jQuery UI datepicker
             wp_enqueue_script('jquery-ui-datepicker');
             wp_enqueue_style(
@@ -267,7 +273,7 @@ class Houses_Client_Meta_Boxes {
                 array(),
                 '1.12.1'
             );
-            
+
             // Enqueue license upload script
             wp_enqueue_script(
                 'houses-admin-license',
@@ -276,7 +282,7 @@ class Houses_Client_Meta_Boxes {
                 _S_VERSION,
                 true
             );
-            
+
             // Enqueue datepicker initialization script
             wp_enqueue_script(
                 'houses-admin-datepicker',
@@ -285,7 +291,7 @@ class Houses_Client_Meta_Boxes {
                 _S_VERSION,
                 true
             );
-            
+
             // Enqueue budget formatter script
             wp_enqueue_script(
                 'houses-admin-budget',
@@ -311,7 +317,8 @@ class Houses_Client_Meta_Boxes {
     /**
      * Add meta boxes
      */
-    public function add_meta_boxes() {
+    public function add_meta_boxes()
+    {
         add_meta_box(
             'houses_customer_meta_boxes',
             'Assignee Details',
@@ -334,7 +341,8 @@ class Houses_Client_Meta_Boxes {
     /**
      * Render meta boxes
      */
-    public function render_meta_boxes($post) {
+    public function render_meta_boxes($post)
+    {
         wp_nonce_field('houses_customer_meta_boxes', 'houses_customer_meta_boxes_nonce');
         foreach ($this->fields as $section => $data) {
             echo '<div class="meta-box-section">';
@@ -349,7 +357,8 @@ class Houses_Client_Meta_Boxes {
     /**
      * Render House List Properties meta box
      */
-    public function render_house_list_properties($post) {
+    public function render_house_list_properties($post)
+    {
         $customer_id = $post->ID;
 
         $house_lists = get_posts(array(
@@ -425,7 +434,8 @@ class Houses_Client_Meta_Boxes {
     /**
      * Render fields recursively
      */
-    private function render_fields($fields, $post) {
+    private function render_fields($fields, $post)
+    {
         foreach ($fields as $field => $config) {
             if (isset($config['fields'])) {
                 echo '<div class="meta-box-subsection">';
@@ -493,7 +503,7 @@ class Houses_Client_Meta_Boxes {
                             $image_url = wp_get_attachment_image_url($value, 'thumbnail');
                             $full_url = wp_get_attachment_url($value);
                             $filename = basename(get_attached_file($value));
-                            
+
                             echo '<div class="license-image">';
                             echo '<img src="' . esc_url($image_url) . '" alt="Driver\'s License">';
                             echo '</div>';
@@ -518,7 +528,8 @@ class Houses_Client_Meta_Boxes {
     /**
      * Save meta boxes
      */
-    public function save_meta_boxes($post_id) {
+    public function save_meta_boxes($post_id)
+    {
         if (!isset($_POST['houses_customer_meta_boxes_nonce']) || !wp_verify_nonce($_POST['houses_customer_meta_boxes_nonce'], 'houses_customer_meta_boxes')) {
             return;
         }
@@ -530,17 +541,18 @@ class Houses_Client_Meta_Boxes {
         if (!current_user_can('edit_post', $post_id)) {
             return;
         }
-        
+
         // Save all fields
         $this->save_fields($this->fields, $post_id);
-        
+
         // Note: Title update is now handled by auto_generate_customer_title function in post-type.php
     }
 
     /**
      * Save fields recursively
      */
-    private function save_fields($fields, $post_id) {
+    private function save_fields($fields, $post_id)
+    {
         foreach ($fields as $field => $config) {
             if (isset($config['fields'])) {
                 $this->save_fields($config['fields'], $post_id);
