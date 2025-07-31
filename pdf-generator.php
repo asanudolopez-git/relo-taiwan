@@ -63,8 +63,18 @@ function generate_customer_house_list_pdf() {
     <?php
     $cover = ob_get_clean();
     try {
+        // Set up writable temp directory for mPDF
+        $upload_dir = wp_upload_dir();
+        $temp_dir = $upload_dir['basedir'] . '/mpdf-temp';
+        
+        // Create temp directory if it doesn't exist
+        if (!file_exists($temp_dir)) {
+            wp_mkdir_p($temp_dir);
+        }
+        
         // Configuración mejorada para mPDF
         $mpdf = new \Mpdf\Mpdf([
+            'tempDir' => $temp_dir,
             'orientation' => 'L',
             'margin_left' => 5,
             'margin_right' => 5,
@@ -239,7 +249,48 @@ function generate_customer_house_list_pdf() {
         }
         
         $filename = sanitize_title($company_name) . '-' . sanitize_title($assignee_title) . '-' . date('Ymd') . '.pdf';
-        $mpdf->Output($filename, \Mpdf\Output\Destination::DOWNLOAD);
+        
+        // Save PDF to WordPress uploads directory
+        $upload_dir = wp_upload_dir();
+        $pdf_dir = $upload_dir['basedir'] . '/customer-house-list-pdfs';
+        
+        // Create directory if it doesn't exist
+        if (!file_exists($pdf_dir)) {
+            wp_mkdir_p($pdf_dir);
+        }
+        
+        $file_path = $pdf_dir . '/' . $filename;
+        $file_url = $upload_dir['baseurl'] . '/customer-house-list-pdfs/' . $filename;
+        
+        // Save PDF file
+        $mpdf->Output($file_path, \Mpdf\Output\Destination::FILE);
+        
+        // Store PDF metadata
+        $pdf_data = array(
+            'filename' => $filename,
+            'file_path' => $file_path,
+            'file_url' => $file_url,
+            'type' => 'with_images',
+            'date_created' => current_time('mysql'),
+            'post_id' => $post_id
+        );
+        
+        // Get existing PDFs for this post
+        $existing_pdfs = get_post_meta($post_id, '_generated_pdfs', true);
+        if (!is_array($existing_pdfs)) {
+            $existing_pdfs = array();
+        }
+        
+        // Add new PDF to the list
+        $existing_pdfs[] = $pdf_data;
+        update_post_meta($post_id, '_generated_pdfs', $existing_pdfs);
+        
+        // Return success response with download link
+        wp_send_json_success(array(
+            'message' => 'PDF generated successfully',
+            'download_url' => $file_url,
+            'filename' => $filename
+        ));
         exit;
     } catch (\Throwable $e) {
         echo '<b>ERROR mPDF:</b> ' . $e->getMessage();
@@ -353,14 +404,65 @@ function generate_customer_house_list_pdf_noimg() {
     <?php
     $html = ob_get_clean();
     try {
+        // Set up writable temp directory for mPDF
+        $upload_dir = wp_upload_dir();
+        $temp_dir = $upload_dir['basedir'] . '/mpdf-temp';
+        
+        // Create temp directory if it doesn't exist
+        if (!file_exists($temp_dir)) {
+            wp_mkdir_p($temp_dir);
+        }
+        
         $mpdf = new \Mpdf\Mpdf([
+            'tempDir' => $temp_dir,
             'orientation' => 'L',
             'default_font' => 'sun-exta',
         ]);
         $mpdf->SetFont('sun-exta');
         $mpdf->WriteHTML($html);
         $filename = sanitize_title($company_name) . '-' . sanitize_title($assignee_title) . '-' . date('Ymd') . '-noimg.pdf';
-        $mpdf->Output($filename, \Mpdf\Output\Destination::DOWNLOAD);
+        
+        // Save PDF to WordPress uploads directory
+        $upload_dir = wp_upload_dir();
+        $pdf_dir = $upload_dir['basedir'] . '/customer-house-list-pdfs';
+        
+        // Create directory if it doesn't exist
+        if (!file_exists($pdf_dir)) {
+            wp_mkdir_p($pdf_dir);
+        }
+        
+        $file_path = $pdf_dir . '/' . $filename;
+        $file_url = $upload_dir['baseurl'] . '/customer-house-list-pdfs/' . $filename;
+        
+        // Save PDF file
+        $mpdf->Output($file_path, \Mpdf\Output\Destination::FILE);
+        
+        // Store PDF metadata
+        $pdf_data = array(
+            'filename' => $filename,
+            'file_path' => $file_path,
+            'file_url' => $file_url,
+            'type' => 'no_images',
+            'date_created' => current_time('mysql'),
+            'post_id' => $post_id
+        );
+        
+        // Get existing PDFs for this post
+        $existing_pdfs = get_post_meta($post_id, '_generated_pdfs', true);
+        if (!is_array($existing_pdfs)) {
+            $existing_pdfs = array();
+        }
+        
+        // Add new PDF to the list
+        $existing_pdfs[] = $pdf_data;
+        update_post_meta($post_id, '_generated_pdfs', $existing_pdfs);
+        
+        // Return success response with download link
+        wp_send_json_success(array(
+            'message' => 'PDF generated successfully',
+            'download_url' => $file_url,
+            'filename' => $filename
+        ));
         exit;
     } catch (\Throwable $e) {
         echo '<b>ERROR mPDF:</b> ' . $e->getMessage();
