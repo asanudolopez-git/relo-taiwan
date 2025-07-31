@@ -21,8 +21,8 @@ class Houses_Accommodation_Meta_Boxes
         'basic_info' => array(
             'title' => 'Settling-In Service Details',
             'fields' => array(
-                'customer_id' => array(
-                    'label' => 'Client',
+                'client_lease_id' => array(
+                    'label' => 'Lease',
                     'type' => 'select',
                     'options' => array(), // Will be populated in constructor
                 ),
@@ -441,15 +441,6 @@ class Houses_Accommodation_Meta_Boxes
      */
     public function save_meta_boxes($post_id)
     {
-        // Debug logging - remove after fixing
-        error_log('ACCOMMODATION SAVE: Starting save for post ID: ' . $post_id);
-        error_log('ACCOMMODATION SAVE: Post type: ' . get_post_type($post_id));
-
-        // Check if this is the correct post type
-        if (get_post_type($post_id) !== 'accommodation') {
-            return;
-        }
-
         // Check if our nonce is set
         if (!isset($_POST['houses_accommodation_details_nonce'])) {
             return;
