@@ -10,9 +10,9 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class Houses_Accommodation_Meta_Boxes
+ * Class accommodation_Meta_Boxes
  */
-class Houses_Accommodation_Meta_Boxes
+class accommodation_Meta_Boxes
 {
     /**
      * Meta box fields configuration
@@ -365,7 +365,7 @@ class Houses_Accommodation_Meta_Boxes
      */
     public function render_meta_box($post)
     {
-        wp_nonce_field('houses_accommodation_details', 'houses_accommodation_details_nonce');
+        wp_nonce_field('accommodation_details', 'accommodation_details_nonce');
 
         // Get all field values
         $values = array();
@@ -400,26 +400,10 @@ class Houses_Accommodation_Meta_Boxes
      */
     public function save_meta_boxes($post_id)
     {
-        // Check if our nonce is set
-        if (!isset($_POST['houses_accommodation_details_nonce'])) {
-            return;
-        }
-
-        // Verify that the nonce is valid
-        if (!wp_verify_nonce($_POST['houses_accommodation_details_nonce'], 'houses_accommodation_details')) {
-            return;
-        }
-
-        // If this is an autosave, our form has not been submitted, so we don't want to do anything
-        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
-            return;
-        }
-
         // Check the user's permissions
         if (!current_user_can('edit_post', $post_id)) {
             return;
         }
-
         // Save all fields
         foreach ($this->fields as $section) {
             foreach ($section['fields'] as $field_id => $field) {
@@ -543,4 +527,4 @@ class Houses_Accommodation_Meta_Boxes
 }
 
 // Initialize the meta boxes
-new Houses_Accommodation_Meta_Boxes();
+new accommodation_Meta_Boxes();
