@@ -407,6 +407,11 @@ class accommodation_Meta_Boxes
         // Save all fields
         foreach ($this->fields as $section) {
             foreach ($section['fields'] as $field_id => $field) {
+                // Skip if field doesn't have a type defined
+                if (!isset($field['type'])) {
+                    continue;
+                }
+                
                 if ($field['type'] === 'checkbox') {
                     // Handle checkbox fields
                     $value = isset($_POST[$field_id]) ? '1' : '';
