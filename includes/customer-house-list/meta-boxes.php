@@ -85,6 +85,9 @@ class Houses_Client_House_List_Meta_Boxes {
         }
         // Agregar botón para generar PDF
         echo '<button type="button" class="button button-primary" id="generate-customer-house-list-pdf" data-postid="' . esc_attr($post->ID) . '">Generate PDF</button>';
+        
+        // Display generated PDFs section
+        $this->render_generated_pdfs_section($post->ID);
     }
 
     private function render_customer_select($field, $value) {
@@ -704,6 +707,88 @@ class Houses_Client_House_List_Meta_Boxes {
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('customer_house_list_pdf_nonce'),
         ));
+    }
+    
+    private function render_generated_pdfs_section($post_id) {
+        $generated_pdfs = get_post_meta($post_id, '_generated_pdfs', true);
+        
+        echo '<div style="margin-top: 30px; padding: 20px; background: #f9f9f9; border: 1px solid #ddd; border-radius: 5px;">';
+        echo '<h3 style="margin-top: 0; color: #23282d; font-size: 18px; border-bottom: 2px solid #0073aa; padding-bottom: 10px; margin-bottom: 20px;"><span class="dashicons dashicons-media-document" style="margin-right: 8px;"></span>Generated PDFs</h3>';
+        
+        if (!is_array($generated_pdfs) || empty($generated_pdfs)) {
+            echo '<div style="text-align: center; padding: 40px; color: #666;">';
+            echo '<span class="dashicons dashicons-pdf" style="font-size: 48px; color: #ccc; display: block; margin-bottom: 15px;"></span>';
+            echo '<p style="font-size: 16px; margin: 0;">No PDFs have been generated yet.</p>';
+            echo '<p style="color: #999; margin: 5px 0 0 0;">Click the "Generate PDF" buttons above to create your first PDF.</p>';
+            echo '</div>';
+            echo '</div>';
+            return;
+        }
+        
+        // Sort PDFs by date (newest first)
+        usort($generated_pdfs, function($a, $b) {
+            return strtotime($b['date_created']) - strtotime($a['date_created']);
+        });
+        
+        echo '<div style="background: white; border-radius: 3px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">';
+        echo '<table class="wp-list-table widefat fixed striped" style="margin: 0; border: none;">';
+        echo '<thead style="background: #f1f1f1;">';
+        echo '<tr>';
+        echo '<th style="width: 15%; padding: 12px 15px; font-weight: 600; color: #23282d;"><span class="dashicons dashicons-format-image" style="margin-right: 5px;"></span>Type</th>';
+        echo '<th style="width: 25%; padding: 12px 15px; font-weight: 600; color: #23282d;"><span class="dashicons dashicons-calendar-alt" style="margin-right: 5px;"></span>Date Created</th>';
+        echo '<th style="width: 40%; padding: 12px 15px; font-weight: 600; color: #23282d;"><span class="dashicons dashicons-media-document" style="margin-right: 5px;"></span>Filename</th>';
+        echo '<th style="width: 20%; padding: 12px 15px; font-weight: 600; color: #23282d; text-align: center;"><span class="dashicons dashicons-download" style="margin-right: 5px;"></span>Action</th>';
+        echo '</tr>';
+        echo '</thead>';
+        echo '<tbody>';
+        
+        foreach ($generated_pdfs as $index => $pdf) {
+            $type_display = ($pdf['type'] === 'with_images') ? 'With Images' : 'No Images';
+            $type_icon = ($pdf['type'] === 'with_images') ? 'dashicons-format-gallery' : 'dashicons-format-aside';
+            $type_color = ($pdf['type'] === 'with_images') ? '#0073aa' : '#00a32a';
+            $date_display = date('M d, Y', strtotime($pdf['date_created']));
+            $time_display = date('H:i', strtotime($pdf['date_created']));
+            
+            $row_bg = ($index % 2 === 0) ? '#ffffff' : '#f9f9f9';
+            
+            echo '<tr style="background: ' . $row_bg . ';">';
+            echo '<td style="padding: 15px; vertical-align: middle;">';
+            echo '<span class="dashicons ' . $type_icon . '" style="color: ' . $type_color . '; margin-right: 8px;"></span>';
+            echo '<strong style="color: ' . $type_color . ';">' . esc_html($type_display) . '</strong>';
+            echo '</td>';
+            echo '<td style="padding: 15px; vertical-align: middle;">';
+            echo '<div style="line-height: 1.4;">';
+            echo '<strong>' . esc_html($date_display) . '</strong><br>';
+            echo '<small style="color: #666;">' . esc_html($time_display) . '</small>';
+            echo '</div>';
+            echo '</td>';
+            echo '<td style="padding: 15px; vertical-align: middle;">';
+            echo '<code style="background: #f1f1f1; padding: 4px 8px; border-radius: 3px; font-size: 12px; color: #333;">' . esc_html($pdf['filename']) . '</code>';
+            echo '</td>';
+            echo '<td style="padding: 15px; vertical-align: middle; text-align: center;">';
+            echo '<a href="' . esc_url($pdf['file_url']) . '" class="button button-primary button-small" target="_blank" download style="text-decoration: none;">';
+            echo '<span class="dashicons dashicons-download" style="font-size: 14px; margin-right: 5px; vertical-align: middle;"></span>Download';
+            echo '</a>';
+            echo '</td>';
+            echo '</tr>';
+        }
+        
+        echo '</tbody>';
+        echo '</table>';
+        echo '</div>';
+        
+        // Add summary info
+        $total_pdfs = count($generated_pdfs);
+        $with_images = count(array_filter($generated_pdfs, function($pdf) { return $pdf['type'] === 'with_images'; }));
+        $no_images = $total_pdfs - $with_images;
+        
+        echo '<div style="margin-top: 15px; padding: 10px; background: #e7f3ff; border-left: 4px solid #0073aa; font-size: 13px; color: #0073aa;">';
+        echo '<strong>Summary:</strong> ' . $total_pdfs . ' PDF' . ($total_pdfs !== 1 ? 's' : '') . ' generated';
+        if ($with_images > 0) echo ' • ' . $with_images . ' with images';
+        if ($no_images > 0) echo ' • ' . $no_images . ' without images';
+        echo '</div>';
+        
+        echo '</div>';
     }
 }
 
