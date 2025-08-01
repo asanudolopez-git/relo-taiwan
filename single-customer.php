@@ -192,17 +192,21 @@ while (have_posts()) : the_post();
     /* --------------------------------------------------
      * Settling-in Services
      * -------------------------------------------------- */
+    // Get settling services (accommodation records) for this specific lease ID only
     $settling_services = get_posts(array(
         'post_type'      => 'accommodation',
         'posts_per_page' => -1,
         'meta_query'     => array(
             array(
-                'key'     => 'customer_id',
-                'value'   => $customer_id,
-                'compare' => '='
+                'key'     => 'client_lease_id',
+                'value'   => $lease_id,
+                'compare' => '=',
+                'type'    => 'NUMERIC'
             ),
         ),
         'post_status'    => 'publish',
+        'orderby'        => 'date',
+        'order'          => 'DESC'
     ));
 
     /* --------------------------------------------------
@@ -605,25 +609,153 @@ while (have_posts()) : the_post();
                         <?php foreach ($settling_services as $service) : ?>
                             <div class="service-item">
                                 <h4><?php echo esc_html(get_the_title($service)); ?></h4>
+                                
+                                <!-- Basic Information -->
                                 <?php 
-                                // Get service details
-                                $service_date = get_post_meta($service->ID, 'home_search_date', true);
-                                $completed_date = get_post_meta($service->ID, 'home_search_completed_at', true);
-                                $briefing_call = get_post_meta($service->ID, 'intro_consultation_call', true);
-                                $briefing_date = get_post_meta($service->ID, 'intro_consultation_call_date', true);
+                                $intro_call = get_post_meta($service->ID, 'intro_consultation_call', true);
+                                $intro_date = get_post_meta($service->ID, 'intro_consultation_call_date', true);
+                                $home_search = get_post_meta($service->ID, 'home_search', true);
+                                $home_search_date = get_post_meta($service->ID, 'home_search_date', true);
+                                $home_search_completed = get_post_meta($service->ID, 'home_search_completed_at', true);
+                                $lease_signed = get_post_meta($service->ID, 'lease_signed', true);
+                                $lease_signed_completed = get_post_meta($service->ID, 'lease_signed_completed_at', true);
+                                $check_in = get_post_meta($service->ID, 'check_in', true);
+                                $check_in_completed = get_post_meta($service->ID, 'check_in_completed_at', true);
+                                $notes = get_post_meta($service->ID, 'notes', true);
                                 ?>
-                                <div class="service-details">
-                                    <?php if ($briefing_call) : ?>
-                                        <p><strong><?php _e('Briefing Call:', 'houses-theme'); ?></strong> 
-                                        <?php echo $briefing_date ? esc_html($briefing_date) : __('Completed', 'houses-theme'); ?></p>
-                                    <?php endif; ?>
-                                    <?php if ($service_date) : ?>
-                                        <p><strong><?php _e('Service Date:', 'houses-theme'); ?></strong> <?php echo esc_html($service_date); ?></p>
-                                    <?php endif; ?>
-                                    <?php if ($completed_date) : ?>
-                                        <p><strong><?php _e('Completed:', 'houses-theme'); ?></strong> <?php echo esc_html($completed_date); ?></p>
-                                    <?php endif; ?>
-                                </div>
+                                
+                                <?php if ($intro_call || $home_search || $lease_signed || $check_in || $notes) : ?>
+                                    <div class="service-section">
+                                        <h5><?php _e('Basic Services', 'houses-theme'); ?></h5>
+                                        <div class="service-details">
+                                            <?php if ($intro_call) : ?>
+                                                <p><strong><?php _e('Intro Consultation Call:', 'houses-theme'); ?></strong> 
+                                                <?php echo $intro_date ? esc_html($intro_date) : __('Completed', 'houses-theme'); ?></p>
+                                            <?php endif; ?>
+                                            <?php if ($home_search) : ?>
+                                                <p><strong><?php _e('Home Search:', 'houses-theme'); ?></strong> 
+                                                <?php echo $home_search_date ? esc_html($home_search_date) : __('Completed', 'houses-theme'); ?></p>
+                                                <?php if ($home_search_completed) : ?>
+                                                    <p><strong><?php _e('Home Search Completed:', 'houses-theme'); ?></strong> <?php echo esc_html($home_search_completed); ?></p>
+                                                <?php endif; ?>
+                                            <?php endif; ?>
+                                            <?php if ($lease_signed) : ?>
+                                                <p><strong><?php _e('Lease Signed:', 'houses-theme'); ?></strong> 
+                                                <?php echo $lease_signed_completed ? esc_html($lease_signed_completed) : __('Completed', 'houses-theme'); ?></p>
+                                            <?php endif; ?>
+                                            <?php if ($check_in) : ?>
+                                                <p><strong><?php _e('Check In:', 'houses-theme'); ?></strong> 
+                                                <?php echo $check_in_completed ? esc_html($check_in_completed) : __('Completed', 'houses-theme'); ?></p>
+                                            <?php endif; ?>
+                                            <?php if ($notes) : ?>
+                                                <p><strong><?php _e('Notes:', 'houses-theme'); ?></strong> <?php echo esc_html($notes); ?></p>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+                                
+                                <!-- WiFi Setup -->
+                                <?php 
+                                $wifi_setup = get_post_meta($service->ID, 'wifi_set_up', true);
+                                $wifi_completed = get_post_meta($service->ID, 'wifi_set_up_completed_at', true);
+                                $telecom_name = get_post_meta($service->ID, 'telecom_name', true);
+                                $monthly_fee = get_post_meta($service->ID, 'monthly_fee', true);
+                                $payment_term = get_post_meta($service->ID, 'payment_term', true);
+                                ?>
+                                
+                                <?php if ($wifi_setup || $telecom_name || $monthly_fee || $payment_term) : ?>
+                                    <div class="service-section">
+                                        <h5><?php _e('WiFi Setup', 'houses-theme'); ?></h5>
+                                        <div class="service-details">
+                                            <?php if ($wifi_setup) : ?>
+                                                <p><strong><?php _e('WiFi Set Up:', 'houses-theme'); ?></strong> 
+                                                <?php echo $wifi_completed ? esc_html($wifi_completed) : __('Completed', 'houses-theme'); ?></p>
+                                            <?php endif; ?>
+                                            <?php if ($telecom_name) : ?>
+                                                <p><strong><?php _e('Telecom Name:', 'houses-theme'); ?></strong> <?php echo esc_html($telecom_name); ?></p>
+                                            <?php endif; ?>
+                                            <?php if ($monthly_fee) : ?>
+                                                <p><strong><?php _e('Monthly Fee:', 'houses-theme'); ?></strong> $<?php echo esc_html($monthly_fee); ?></p>
+                                            <?php endif; ?>
+                                            <?php if ($payment_term) : ?>
+                                                <p><strong><?php _e('Payment Term:', 'houses-theme'); ?></strong> <?php echo esc_html($payment_term); ?> <?php _e('months', 'houses-theme'); ?></p>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+                                
+                                <!-- Mobile Services -->
+                                <?php 
+                                $mobile_setup = get_post_meta($service->ID, 'mobile_set_up', true);
+                                $mobile_completed = get_post_meta($service->ID, 'mobile_set_up_completed_at', true);
+                                $local_mobile = get_post_meta($service->ID, 'local_mobile_number', true);
+                                $telecom_company = get_post_meta($service->ID, 'telecom_company', true);
+                                ?>
+                                
+                                <?php if ($mobile_setup || $local_mobile || $telecom_company) : ?>
+                                    <div class="service-section">
+                                        <h5><?php _e('Mobile Services', 'houses-theme'); ?></h5>
+                                        <div class="service-details">
+                                            <?php if ($mobile_setup) : ?>
+                                                <p><strong><?php _e('Mobile Services:', 'houses-theme'); ?></strong> 
+                                                <?php echo $mobile_completed ? esc_html($mobile_completed) : __('Completed', 'houses-theme'); ?></p>
+                                            <?php endif; ?>
+                                            <?php if ($local_mobile) : ?>
+                                                <p><strong><?php _e('Local Mobile Number:', 'houses-theme'); ?></strong> <?php echo esc_html($local_mobile); ?></p>
+                                            <?php endif; ?>
+                                            <?php if ($telecom_company) : ?>
+                                                <p><strong><?php _e('Telecom Company:', 'houses-theme'); ?></strong> <?php echo esc_html($telecom_company); ?></p>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+                                
+                                <!-- Bank Account -->
+                                <?php 
+                                $bank_setup = get_post_meta($service->ID, 'bank_account_set_up', true);
+                                $bank_completed = get_post_meta($service->ID, 'bank_account_set_up_completed_at', true);
+                                ?>
+                                
+                                <?php if ($bank_setup) : ?>
+                                    <div class="service-section">
+                                        <h5><?php _e('Bank Account', 'houses-theme'); ?></h5>
+                                        <div class="service-details">
+                                            <p><strong><?php _e('Bank Account Set Up:', 'houses-theme'); ?></strong> 
+                                            <?php echo $bank_completed ? esc_html($bank_completed) : __('Completed', 'houses-theme'); ?></p>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+                                
+                                <!-- Driver's License Conversion -->
+                                <?php 
+                                $license_conversion = get_post_meta($service->ID, 'license_conversion', true);
+                                $license_completed = get_post_meta($service->ID, 'license_conversion_completed_at', true);
+                                $domestic_license = get_post_meta($service->ID, 'domestic_license_location', true);
+                                $license_completion = get_post_meta($service->ID, 'license_completion', true);
+                                $license_notes = get_post_meta($service->ID, 'license_notes', true);
+                                ?>
+                                
+                                <?php if ($license_conversion || $domestic_license || $license_completion || $license_notes) : ?>
+                                    <div class="service-section">
+                                        <h5><?php _e('Driver\'s License Conversion', 'houses-theme'); ?></h5>
+                                        <div class="service-details">
+                                            <?php if ($license_conversion) : ?>
+                                                <p><strong><?php _e('License Conversion:', 'houses-theme'); ?></strong> 
+                                                <?php echo $license_completed ? esc_html($license_completed) : __('Completed', 'houses-theme'); ?></p>
+                                            <?php endif; ?>
+                                            <?php if ($domestic_license) : ?>
+                                                <p><strong><?php _e('Domestic License Location:', 'houses-theme'); ?></strong> <?php echo esc_html($domestic_license); ?></p>
+                                            <?php endif; ?>
+                                            <?php if ($license_completion) : ?>
+                                                <p><strong><?php _e('License Completion:', 'houses-theme'); ?></strong> <?php _e('Completed', 'houses-theme'); ?></p>
+                                            <?php endif; ?>
+                                            <?php if ($license_notes) : ?>
+                                                <p><strong><?php _e('License Notes:', 'houses-theme'); ?></strong> <?php echo esc_html($license_notes); ?></p>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+                                
                             </div>
                         <?php endforeach; ?>
                     </div>
