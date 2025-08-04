@@ -4,12 +4,69 @@
  * Shows public-facing profile for an assignee with sections:
  *  - Basic Information
  *  - Property Chosen (Lease Summary)
+ *  - House List PDFs
  *  - Settling-in Services
  *  - Extension
  *  - Departure
  *
  * @package Houses Theme
  */
+
+// Add custom styles for PDF section
+function add_customer_pdf_styles() {
+    echo '<style>
+    .house-list-pdfs .house-list-pdf-group {
+        margin-bottom: 30px;
+        padding: 20px;
+        background: #f9f9f9;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+    }
+    .house-list-pdfs h3 {
+        margin-top: 0;
+        color: #23282d;
+        border-bottom: 1px solid #0073aa;
+        padding-bottom: 10px;
+    }
+    .pdf-item {
+        display: flex;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+    }
+    .pdf-item:last-child {
+        border-bottom: none;
+    }
+    .pdf-item .dashicons {
+        color: #0073aa;
+        margin-right: 10px;
+        font-size: 20px;
+    }
+    .pdf-item a {
+        text-decoration: none;
+        color: #0073aa;
+        font-weight: 500;
+        margin-right: 10px;
+    }
+    .pdf-item a:hover {
+        text-decoration: underline;
+    }
+    .pdf-type.with_images {
+        color: #0073aa;
+        font-weight: bold;
+    }
+    .pdf-type.no_images {
+        color: #00a32a;
+        font-weight: bold;
+    }
+    .pdf-date {
+        color: #666;
+        font-size: 14px;
+        margin-left: auto;
+    }
+    </style>';
+}
+add_action('wp_head', 'add_customer_pdf_styles');
 
 /**
  * Get complete property details including gallery
@@ -597,6 +654,48 @@ while (have_posts()) : the_post();
                                 </div>
                             <?php endif; ?>
                         </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+
+            <!-- Customer House List PDFs -->
+            <?php if (!empty($house_lists)) : ?>
+                <div class="section house-list-pdfs">
+                    <h2><?php _e('House List PDFs', 'houses-theme'); ?></h2>
+                    <?php foreach ($house_lists as $house_list) : ?>
+                        <?php
+                        $generated_pdfs = get_post_meta($house_list->ID, '_generated_pdfs', true);
+                        if (!empty($generated_pdfs) && is_array($generated_pdfs)) :
+                            // Sort PDFs by date (newest first)
+                            usort($generated_pdfs, function($a, $b) {
+                                return strtotime($b['date_created']) - strtotime($a['date_created']);
+                            });
+                            ?>
+                            <div class="house-list-pdf-group">
+                                <h3><?php echo esc_html(get_the_title($house_list->ID)); ?></h3>
+                                <div class="pdf-list">
+                                    <?php foreach ($generated_pdfs as $pdf) : ?>
+                                        <div class="pdf-item">
+                                            <span class="dashicons dashicons-media-document"></span>
+                                            <a href="<?php echo esc_url($pdf['file_url']); ?>" target="_blank" download>
+                                                <?php echo esc_html($pdf['filename']); ?>
+                                            </a>
+                                            <span class="pdf-type <?php echo esc_attr($pdf['type']); ?>">
+                                                (<?php echo ($pdf['type'] === 'with_images') ? __('With Images', 'houses-theme') : __('No Images', 'houses-theme'); ?>)
+                                            </span>
+                                            <span class="pdf-date">
+                                                <?php echo date('M d, Y H:i', strtotime($pdf['date_created'])); ?>
+                                            </span>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                        <?php else : ?>
+                            <div class="house-list-pdf-group">
+                                <h3><?php echo esc_html(get_the_title($house_list->ID)); ?></h3>
+                                <p><?php _e('No PDFs have been generated for this house list yet.', 'houses-theme'); ?></p>
+                            </div>
+                        <?php endif; ?>
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>
