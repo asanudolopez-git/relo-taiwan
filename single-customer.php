@@ -29,7 +29,11 @@ function get_complete_property_details($property_id) {
     $meta_keys = array(
         'address_english', 'address_chinese', 'property_type', 'bedrooms', 'bathrooms',
         'size_sqm', 'floor', 'total_floors', 'rent_price', 'deposit', 'mrt', 'mrt_distance',
-        'furnished', 'parking', 'pets_allowed', 'balcony', 'elevator', 'amenities', 'gallery_images'
+        'furnished', 'parking', 'pets_allowed', 'balcony', 'elevator', 'amenities', 'gallery_images', 
+        'rent', 'tax_included', 'management_fee_included', 'property_post_id', 'metro_line', 'station', 
+        'address', 'zip_code', 'chinese_address', 'bedroom', 'bathroom', 'floor', 'total_floor', 'building_age', 'net_size', 
+        'square_meters', 'property_type', 'parking', 'gym', 'swimming_pool', 'notes', 'gallery_images', 'address_english', 
+        'bedrooms', 'bathrooms', 'total_floors', 'size_sqm', 'rent_price', 'mrt', 'amenities'
     );
     
     $meta_data = array();
@@ -56,25 +60,39 @@ function get_complete_property_details($property_id) {
         'id' => $property_id,
         'title' => get_the_title($property_id),
         'content' => apply_filters('the_content', $property->post_content),
-        'address_english' => sanitize_text_field($meta_data['address_english']),
-        'address_chinese' => sanitize_text_field($meta_data['address_chinese']),
-        'property_type' => sanitize_text_field($meta_data['property_type']),
-        'bedrooms' => absint($meta_data['bedrooms']),
-        'bathrooms' => absint($meta_data['bathrooms']),
-        'size_sqm' => floatval($meta_data['size_sqm']),
-        'floor' => sanitize_text_field($meta_data['floor']),
-        'total_floors' => absint($meta_data['total_floors']),
-        'rent_price' => sanitize_text_field($meta_data['rent_price']),
-        'deposit' => sanitize_text_field($meta_data['deposit']),
-        'mrt' => sanitize_text_field($meta_data['mrt']),
-        'mrt_distance' => absint($meta_data['mrt_distance']),
-        'furnished' => sanitize_text_field($meta_data['furnished']),
-        'parking' => sanitize_text_field($meta_data['parking']),
-        'pets_allowed' => sanitize_text_field($meta_data['pets_allowed']),
-        'balcony' => sanitize_text_field($meta_data['balcony']),
-        'elevator' => sanitize_text_field($meta_data['elevator']),
-        'amenities' => sanitize_textarea_field($meta_data['amenities']),
+        // Basic Info fields from meta-boxes
+        'rent' => sanitize_text_field($meta_data['rent'] ?? ''),
+        'tax_included' => sanitize_text_field($meta_data['tax_included'] ?? ''),
+        'management_fee_included' => sanitize_text_field($meta_data['management_fee_included'] ?? ''),
+        'property_post_id' => sanitize_text_field($meta_data['property_post_id'] ?? ''),
+        'metro_line' => sanitize_text_field($meta_data['metro_line'] ?? ''),
+        'station' => sanitize_text_field($meta_data['station'] ?? ''),
+        'address' => sanitize_text_field($meta_data['address'] ?? ''),
+        'zip_code' => sanitize_text_field($meta_data['zip_code'] ?? ''),
+        'chinese_address' => sanitize_text_field($meta_data['chinese_address'] ?? ''),
+        'bedroom' => absint($meta_data['bedroom'] ?? 0),
+        'bathroom' => absint($meta_data['bathroom'] ?? 0),
+        'floor' => absint($meta_data['floor'] ?? 0),
+        'total_floor' => absint($meta_data['total_floor'] ?? 0),
+        'building_age' => absint($meta_data['building_age'] ?? 0),
+        'net_size' => floatval($meta_data['net_size'] ?? 0),
+        'square_meters' => sanitize_text_field($meta_data['square_meters'] ?? ''),
+        'property_type' => sanitize_text_field($meta_data['property_type'] ?? ''),
+        'parking' => sanitize_text_field($meta_data['parking'] ?? ''),
+        // Details fields from meta-boxes
+        'gym' => sanitize_text_field($meta_data['gym'] ?? ''),
+        'swimming_pool' => sanitize_text_field($meta_data['swimming_pool'] ?? ''),
+        'notes' => sanitize_textarea_field($meta_data['notes'] ?? ''),
         'gallery_images' => $gallery_images,
+        // Legacy field mappings for backward compatibility
+        'address_english' => sanitize_text_field($meta_data['address'] ?? ''),
+        'bedrooms' => absint($meta_data['bedroom'] ?? 0),
+        'bathrooms' => absint($meta_data['bathroom'] ?? 0),
+        'total_floors' => absint($meta_data['total_floor'] ?? 0),
+        'size_sqm' => floatval($meta_data['net_size'] ?? 0),
+        'rent_price' => sanitize_text_field($meta_data['rent'] ?? ''),
+        'mrt' => sanitize_text_field($meta_data['station'] ?? ''),
+        'amenities' => sanitize_textarea_field($meta_data['notes'] ?? ''),
     );
     
     return $details;
@@ -314,113 +332,192 @@ while (have_posts()) : the_post();
                         
                         <!-- Property Information -->
                         <div class="property-info">
-                            <div class="info-grid">
-                                <?php if ($lease_property_details['address_english']) : ?>
-                                    <div class="info-item">
-                                        <strong><?php _e('Address (English)', 'houses-theme'); ?>:</strong>
-                                        <span><?php echo esc_html($lease_property_details['address_english']); ?></span>
-                                    </div>
-                                <?php endif; ?>
-                                
-                                <?php if ($lease_property_details['address_chinese']) : ?>
-                                    <div class="info-item">
-                                        <strong><?php _e('Address (Chinese)', 'houses-theme'); ?>:</strong>
-                                        <span><?php echo esc_html($lease_property_details['address_chinese']); ?></span>
-                                    </div>
-                                <?php endif; ?>
-                                
-                                <?php if ($lease_property_details['property_type']) : ?>
-                                    <div class="info-item">
-                                        <strong><?php _e('Property Type', 'houses-theme'); ?>:</strong>
-                                        <span><?php echo esc_html($lease_property_details['property_type']); ?></span>
-                                    </div>
-                                <?php endif; ?>
-                                
-                                <?php if ($lease_property_details['bedrooms']) : ?>
-                                    <div class="info-item">
-                                        <strong><?php _e('Bedrooms', 'houses-theme'); ?>:</strong>
-                                        <span><?php echo esc_html($lease_property_details['bedrooms']); ?></span>
-                                    </div>
-                                <?php endif; ?>
-                                
-                                <?php if ($lease_property_details['bathrooms']) : ?>
-                                    <div class="info-item">
-                                        <strong><?php _e('Bathrooms', 'houses-theme'); ?>:</strong>
-                                        <span><?php echo esc_html($lease_property_details['bathrooms']); ?></span>
-                                    </div>
-                                <?php endif; ?>
-                                
-                                <?php if ($lease_property_details['size_sqm']) : ?>
-                                    <div class="info-item">
-                                        <strong><?php _e('Size', 'houses-theme'); ?>:</strong>
-                                        <span><?php echo esc_html($lease_property_details['size_sqm']); ?> m²</span>
-                                    </div>
-                                <?php endif; ?>
-                                
-                                <?php if ($lease_property_details['floor'] || $lease_property_details['total_floors']) : ?>
-                                    <div class="info-item">
-                                        <strong><?php _e('Floor', 'houses-theme'); ?>:</strong>
-                                        <span>
-                                            <?php if ($lease_property_details['floor']) echo esc_html($lease_property_details['floor']); ?>
-                                            <?php if ($lease_property_details['total_floors']) echo ' / ' . esc_html($lease_property_details['total_floors']); ?>
-                                        </span>
-                                    </div>
-                                <?php endif; ?>
-                                
-                                <?php if ($lease_property_details['mrt']) : ?>
-                                    <div class="info-item">
-                                        <strong><?php _e('MRT Station', 'houses-theme'); ?>:</strong>
-                                        <span>
-                                            <?php echo esc_html($lease_property_details['mrt']); ?>
-                                            <?php if ($lease_property_details['mrt_distance']) : ?>
-                                                (<?php echo esc_html($lease_property_details['mrt_distance']); ?> min walk)
-                                            <?php endif; ?>
-                                        </span>
-                                    </div>
-                                <?php endif; ?>
-                                
-                                <?php if ($lease_property_details['furnished']) : ?>
-                                    <div class="info-item">
-                                        <strong><?php _e('Furnished', 'houses-theme'); ?>:</strong>
-                                        <span><?php echo $lease_property_details['furnished'] === 'yes' ? __('Yes', 'houses-theme') : __('No', 'houses-theme'); ?></span>
-                                    </div>
-                                <?php endif; ?>
-                                
-                                <?php if ($lease_property_details['parking']) : ?>
-                                    <div class="info-item">
-                                        <strong><?php _e('Parking', 'houses-theme'); ?>:</strong>
-                                        <span><?php echo $lease_property_details['parking'] === 'yes' ? __('Available', 'houses-theme') : __('Not Available', 'houses-theme'); ?></span>
-                                    </div>
-                                <?php endif; ?>
-                                
-                                <?php if ($lease_property_details['pets_allowed']) : ?>
-                                    <div class="info-item">
-                                        <strong><?php _e('Pets Allowed', 'houses-theme'); ?>:</strong>
-                                        <span><?php echo $lease_property_details['pets_allowed'] === 'yes' ? __('Yes', 'houses-theme') : __('No', 'houses-theme'); ?></span>
-                                    </div>
-                                <?php endif; ?>
-                                
-                                <?php if ($lease_property_details['balcony']) : ?>
-                                    <div class="info-item">
-                                        <strong><?php _e('Balcony', 'houses-theme'); ?>:</strong>
-                                        <span><?php echo $lease_property_details['balcony'] === 'yes' ? __('Yes', 'houses-theme') : __('No', 'houses-theme'); ?></span>
-                                    </div>
-                                <?php endif; ?>
-                                
-                                <?php if ($lease_property_details['elevator']) : ?>
-                                    <div class="info-item">
-                                        <strong><?php _e('Elevator', 'houses-theme'); ?>:</strong>
-                                        <span><?php echo $lease_property_details['elevator'] === 'yes' ? __('Yes', 'houses-theme') : __('No', 'houses-theme'); ?></span>
-                                    </div>
-                                <?php endif; ?>
-                                
-                                <?php if ($lease_property_details['amenities']) : ?>
-                                    <div class="info-item">
-                                        <strong><?php _e('Amenities', 'houses-theme'); ?>:</strong>
-                                        <span><?php echo esc_html($lease_property_details['amenities']); ?></span>
-                                    </div>
-                                <?php endif; ?>
+                            <!-- Basic Information Section -->
+                            <div class="property-section">
+                                <h4 class="section-title"><?php _e('📍 Location & Address', 'houses-theme'); ?></h4>
+                                <div class="info-grid">
+                                    <?php if ($lease_property_details['address']) : ?>
+                                        <div class="info-item">
+                                            <strong><?php _e('Address (English)', 'houses-theme'); ?>:</strong>
+                                            <span><?php echo esc_html($lease_property_details['address']); ?></span>
+                                        </div>
+                                    <?php endif; ?>
+                                    
+                                    <?php if ($lease_property_details['chinese_address']) : ?>
+                                        <div class="info-item">
+                                            <strong><?php _e('Address (Chinese)', 'houses-theme'); ?>:</strong>
+                                            <span><?php echo esc_html($lease_property_details['chinese_address']); ?></span>
+                                        </div>
+                                    <?php endif; ?>
+                                    
+                                    <?php if ($lease_property_details['zip_code']) : ?>
+                                        <div class="info-item">
+                                            <strong><?php _e('ZIP Code', 'houses-theme'); ?>:</strong>
+                                            <span><?php echo esc_html($lease_property_details['zip_code']); ?></span>
+                                        </div>
+                                    <?php endif; ?>
+                                    
+                                    <?php if ($lease_property_details['metro_line'] || $lease_property_details['station']) : ?>
+                                        <div class="info-item">
+                                            <strong><?php _e('MRT Station', 'houses-theme'); ?>:</strong>
+                                            <span>
+                                                <?php if ($lease_property_details['metro_line']) : ?>
+                                                    <span class="metro-line"><?php echo esc_html($lease_property_details['metro_line']); ?></span>
+                                                <?php endif; ?>
+                                                <?php if ($lease_property_details['station']) : ?>
+                                                    <?php echo esc_html($lease_property_details['station']); ?>
+                                                <?php endif; ?>
+                                            </span>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
                             </div>
+
+                            <!-- Property Details Section -->
+                            <div class="property-section">
+                                <h4 class="section-title"><?php _e('🏠 Property Details', 'houses-theme'); ?></h4>
+                                <div class="info-grid">
+                                    <?php if ($lease_property_details['property_type']) : ?>
+                                        <div class="info-item">
+                                            <strong><?php _e('Property Type', 'houses-theme'); ?>:</strong>
+                                            <span class="property-type"><?php echo esc_html(ucfirst($lease_property_details['property_type'])); ?></span>
+                                        </div>
+                                    <?php endif; ?>
+                                    
+                                    <?php if ($lease_property_details['bedroom']) : ?>
+                                        <div class="info-item">
+                                            <strong><?php _e('Bedrooms', 'houses-theme'); ?>:</strong>
+                                            <span class="bedroom-count"><?php echo esc_html($lease_property_details['bedroom']); ?></span>
+                                        </div>
+                                    <?php endif; ?>
+                                    
+                                    <?php if ($lease_property_details['bathroom']) : ?>
+                                        <div class="info-item">
+                                            <strong><?php _e('Bathrooms', 'houses-theme'); ?>:</strong>
+                                            <span class="bathroom-count"><?php echo esc_html($lease_property_details['bathroom']); ?></span>
+                                        </div>
+                                    <?php endif; ?>
+                                    
+                                    <?php if ($lease_property_details['net_size']) : ?>
+                                        <div class="info-item">
+                                            <strong><?php _e('Net Size', 'houses-theme'); ?>:</strong>
+                                            <span class="size"><?php echo esc_html($lease_property_details['net_size']); ?> m²</span>
+                                        </div>
+                                    <?php endif; ?>
+                                    
+                                    <?php if ($lease_property_details['square_meters']) : ?>
+                                        <div class="info-item">
+                                            <strong><?php _e('Square Meters', 'houses-theme'); ?>:</strong>
+                                            <span><?php echo esc_html($lease_property_details['square_meters']); ?></span>
+                                        </div>
+                                    <?php endif; ?>
+                                    
+                                    <?php if ($lease_property_details['floor'] || $lease_property_details['total_floor']) : ?>
+                                        <div class="info-item">
+                                            <strong><?php _e('Floor', 'houses-theme'); ?>:</strong>
+                                            <span class="floor-info">
+                                                <?php if ($lease_property_details['floor']) echo esc_html($lease_property_details['floor']); ?>
+                                                <?php if ($lease_property_details['total_floor']) echo ' / ' . esc_html($lease_property_details['total_floor']); ?>
+                                            </span>
+                                        </div>
+                                    <?php endif; ?>
+                                    
+                                    <?php if ($lease_property_details['building_age']) : ?>
+                                        <div class="info-item">
+                                            <strong><?php _e('Building Age', 'houses-theme'); ?>:</strong>
+                                            <span><?php echo esc_html($lease_property_details['building_age']); ?> <?php _e('years', 'houses-theme'); ?></span>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+
+                            <!-- Financial Information Section -->
+                            <div class="property-section">
+                                <h4 class="section-title"><?php _e('💰 Financial Information', 'houses-theme'); ?></h4>
+                                <div class="info-grid">
+                                    <?php if ($lease_property_details['rent']) : ?>
+                                        <div class="info-item">
+                                            <strong><?php _e('Rent', 'houses-theme'); ?>:</strong>
+                                            <span class="rent-price">NT$ <?php echo esc_html($lease_property_details['rent']); ?></span>
+                                        </div>
+                                    <?php endif; ?>
+                                    
+                                    <?php if ($lease_property_details['tax_included']) : ?>
+                                        <div class="info-item">
+                                            <strong><?php _e('Tax Included', 'houses-theme'); ?>:</strong>
+                                            <span class="<?php echo $lease_property_details['tax_included'] === 'yes' ? 'status-yes' : 'status-no'; ?>">
+                                                <?php echo $lease_property_details['tax_included'] === 'yes' ? __('Yes', 'houses-theme') : __('No', 'houses-theme'); ?>
+                                            </span>
+                                        </div>
+                                    <?php endif; ?>
+                                    
+                                    <?php if ($lease_property_details['management_fee_included']) : ?>
+                                        <div class="info-item">
+                                            <strong><?php _e('Management Fee Included', 'houses-theme'); ?>:</strong>
+                                            <span class="<?php echo $lease_property_details['management_fee_included'] === 'yes' ? 'status-yes' : 'status-no'; ?>">
+                                                <?php echo $lease_property_details['management_fee_included'] === 'yes' ? __('Yes', 'houses-theme') : __('No', 'houses-theme'); ?>
+                                            </span>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+
+                            <!-- Amenities & Features Section -->
+                            <div class="property-section">
+                                <h4 class="section-title"><?php _e('🏋️ Amenities & Features', 'houses-theme'); ?></h4>
+                                <div class="info-grid">
+                                    <?php if ($lease_property_details['parking']) : ?>
+                                        <div class="info-item">
+                                            <strong><?php _e('Parking', 'houses-theme'); ?>:</strong>
+                                            <span class="parking-status">
+                                                <?php 
+                                                switch($lease_property_details['parking']) {
+                                                    case 'yes':
+                                                        echo '<span class="status-yes">' . __('Available', 'houses-theme') . '</span>';
+                                                        break;
+                                                    case 'no':
+                                                        echo '<span class="status-no">' . __('Not Available', 'houses-theme') . '</span>';
+                                                        break;
+                                                    case 'contact_agent':
+                                                        echo '<span class="status-contact">' . __('Contact Agent', 'houses-theme') . '</span>';
+                                                        break;
+                                                    default:
+                                                        echo esc_html($lease_property_details['parking']);
+                                                }
+                                                ?>
+                                            </span>
+                                        </div>
+                                    <?php endif; ?>
+                                    
+                                    <?php if ($lease_property_details['gym']) : ?>
+                                        <div class="info-item">
+                                            <strong><?php _e('Gym', 'houses-theme'); ?>:</strong>
+                                            <span class="<?php echo $lease_property_details['gym'] === 'yes' ? 'status-yes' : 'status-no'; ?>">
+                                                <?php echo $lease_property_details['gym'] === 'yes' ? __('Available', 'houses-theme') : __('Not Available', 'houses-theme'); ?>
+                                            </span>
+                                        </div>
+                                    <?php endif; ?>
+                                    
+                                    <?php if ($lease_property_details['swimming_pool']) : ?>
+                                        <div class="info-item">
+                                            <strong><?php _e('Swimming Pool', 'houses-theme'); ?>:</strong>
+                                            <span class="<?php echo $lease_property_details['swimming_pool'] === 'yes' ? 'status-yes' : 'status-no'; ?>">
+                                                <?php echo $lease_property_details['swimming_pool'] === 'yes' ? __('Available', 'houses-theme') : __('Not Available', 'houses-theme'); ?>
+                                            </span>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+
+                            <!-- Additional Notes Section -->
+                            <?php if ($lease_property_details['notes']) : ?>
+                                <div class="property-section">
+                                    <h4 class="section-title"><?php _e('📝 Additional Notes', 'houses-theme'); ?></h4>
+                                    <div class="notes-content">
+                                        <p><?php echo esc_html($lease_property_details['notes']); ?></p>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
                         </div>
                         
                         <?php if ($lease_property_details['content']) : ?>
@@ -465,127 +562,192 @@ while (have_posts()) : the_post();
                             
                             <!-- Property Information -->
                             <div class="property-info">
-                                <div class="info-grid">
-                                    <?php if ($property['address_english']) : ?>
-                                        <div class="info-item">
-                                            <strong><?php _e('Address (English)', 'houses-theme'); ?>:</strong>
-                                            <span><?php echo esc_html($property['address_english']); ?></span>
-                                        </div>
-                                    <?php endif; ?>
-                                    
-                                    <?php if ($property['address_chinese']) : ?>
-                                        <div class="info-item">
-                                            <strong><?php _e('Address (Chinese)', 'houses-theme'); ?>:</strong>
-                                            <span><?php echo esc_html($property['address_chinese']); ?></span>
-                                        </div>
-                                    <?php endif; ?>
-                                    
-                                    <?php if ($property['property_type']) : ?>
-                                        <div class="info-item">
-                                            <strong><?php _e('Property Type', 'houses-theme'); ?>:</strong>
-                                            <span><?php echo esc_html($property['property_type']); ?></span>
-                                        </div>
-                                    <?php endif; ?>
-                                    
-                                    <?php if ($property['bedrooms']) : ?>
-                                        <div class="info-item">
-                                            <strong><?php _e('Bedrooms', 'houses-theme'); ?>:</strong>
-                                            <span><?php echo esc_html($property['bedrooms']); ?></span>
-                                        </div>
-                                    <?php endif; ?>
-                                    
-                                    <?php if ($property['bathrooms']) : ?>
-                                        <div class="info-item">
-                                            <strong><?php _e('Bathrooms', 'houses-theme'); ?>:</strong>
-                                            <span><?php echo esc_html($property['bathrooms']); ?></span>
-                                        </div>
-                                    <?php endif; ?>
-                                    
-                                    <?php if ($property['size_sqm']) : ?>
-                                        <div class="info-item">
-                                            <strong><?php _e('Size', 'houses-theme'); ?>:</strong>
-                                            <span><?php echo esc_html($property['size_sqm']); ?> m²</span>
-                                        </div>
-                                    <?php endif; ?>
-                                    
-                                    <?php if ($property['floor'] || $property['total_floors']) : ?>
-                                        <div class="info-item">
-                                            <strong><?php _e('Floor', 'houses-theme'); ?>:</strong>
-                                            <span>
-                                                <?php if ($property['floor']) echo esc_html($property['floor']); ?>
-                                                <?php if ($property['total_floors']) echo ' / ' . esc_html($property['total_floors']); ?>
-                                            </span>
-                                        </div>
-                                    <?php endif; ?>
-                                    
-                                    <?php if ($property['rent_price']) : ?>
-                                        <div class="info-item">
-                                            <strong><?php _e('Rent Price', 'houses-theme'); ?>:</strong>
-                                            <span><?php echo esc_html($property['rent_price']); ?></span>
-                                        </div>
-                                    <?php endif; ?>
-                                    
-                                    <?php if ($property['deposit']) : ?>
-                                        <div class="info-item">
-                                            <strong><?php _e('Deposit', 'houses-theme'); ?>:</strong>
-                                            <span><?php echo esc_html($property['deposit']); ?></span>
-                                        </div>
-                                    <?php endif; ?>
-                                    
-                                    <?php if ($property['mrt']) : ?>
-                                        <div class="info-item">
-                                            <strong><?php _e('MRT Station', 'houses-theme'); ?>:</strong>
-                                            <span>
-                                                <?php echo esc_html($property['mrt']); ?>
-                                                <?php if ($property['mrt_distance']) : ?>
-                                                    (<?php echo esc_html($property['mrt_distance']); ?> min walk)
-                                                <?php endif; ?>
-                                            </span>
-                                        </div>
-                                    <?php endif; ?>
-                                    
-                                    <?php if ($property['furnished']) : ?>
-                                        <div class="info-item">
-                                            <strong><?php _e('Furnished', 'houses-theme'); ?>:</strong>
-                                            <span><?php echo $property['furnished'] === 'yes' ? __('Yes', 'houses-theme') : __('No', 'houses-theme'); ?></span>
-                                        </div>
-                                    <?php endif; ?>
-                                    
-                                    <?php if ($property['parking']) : ?>
-                                        <div class="info-item">
-                                            <strong><?php _e('Parking', 'houses-theme'); ?>:</strong>
-                                            <span><?php echo $property['parking'] === 'yes' ? __('Available', 'houses-theme') : __('Not Available', 'houses-theme'); ?></span>
-                                        </div>
-                                    <?php endif; ?>
-                                    
-                                    <?php if ($property['pets_allowed']) : ?>
-                                        <div class="info-item">
-                                            <strong><?php _e('Pets Allowed', 'houses-theme'); ?>:</strong>
-                                            <span><?php echo $property['pets_allowed'] === 'yes' ? __('Yes', 'houses-theme') : __('No', 'houses-theme'); ?></span>
-                                        </div>
-                                    <?php endif; ?>
-                                    
-                                    <?php if ($property['balcony']) : ?>
-                                        <div class="info-item">
-                                            <strong><?php _e('Balcony', 'houses-theme'); ?>:</strong>
-                                            <span><?php echo $property['balcony'] === 'yes' ? __('Yes', 'houses-theme') : __('No', 'houses-theme'); ?></span>
-                                        </div>
-                                    <?php endif; ?>
-                                    
-                                    <?php if ($property['elevator']) : ?>
-                                        <div class="info-item">
-                                            <strong><?php _e('Elevator', 'houses-theme'); ?>:</strong>
-                                            <span><?php echo $property['elevator'] === 'yes' ? __('Yes', 'houses-theme') : __('No', 'houses-theme'); ?></span>
-                                        </div>
-                                    <?php endif; ?>
-                                    
-                                    <?php if ($property['amenities']) : ?>
-                                        <div class="info-item">
-                                            <strong><?php _e('Amenities', 'houses-theme'); ?>:</strong>
-                                            <span><?php echo esc_html($property['amenities']); ?></span>
-                                        </div>
-                                    <?php endif; ?>
+                                <!-- Location & Address Section -->
+                                <div class="property-section">
+                                    <h4 class="section-title"><?php _e('📍 Location & Address', 'houses-theme'); ?></h4>
+                                    <div class="info-grid">
+                                        <?php if ($property['address']) : ?>
+                                            <div class="info-item">
+                                                <strong><?php _e('Address (English)', 'houses-theme'); ?>:</strong>
+                                                <span><?php echo esc_html($property['address']); ?></span>
+                                            </div>
+                                        <?php endif; ?>
+                                        
+                                        <?php if ($property['chinese_address']) : ?>
+                                            <div class="info-item">
+                                                <strong><?php _e('Address (Chinese)', 'houses-theme'); ?>:</strong>
+                                                <span><?php echo esc_html($property['chinese_address']); ?></span>
+                                            </div>
+                                        <?php endif; ?>
+                                        
+                                        <?php if ($property['zip_code']) : ?>
+                                            <div class="info-item">
+                                                <strong><?php _e('ZIP Code', 'houses-theme'); ?>:</strong>
+                                                <span><?php echo esc_html($property['zip_code']); ?></span>
+                                            </div>
+                                        <?php endif; ?>
+                                        
+                                        <?php if ($property['metro_line'] || $property['station']) : ?>
+                                            <div class="info-item">
+                                                <strong><?php _e('MRT Station', 'houses-theme'); ?>:</strong>
+                                                <span>
+                                                    <?php if ($property['metro_line']) : ?>
+                                                        <span class="metro-line"><?php echo esc_html($property['metro_line']); ?></span>
+                                                    <?php endif; ?>
+                                                    <?php if ($property['station']) : ?>
+                                                        <?php echo esc_html($property['station']); ?>
+                                                    <?php endif; ?>
+                                                </span>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
                                 </div>
+
+                                <!-- Property Details Section -->
+                                <div class="property-section">
+                                    <h4 class="section-title"><?php _e('🏠 Property Details', 'houses-theme'); ?></h4>
+                                    <div class="info-grid">
+                                        <?php if ($property['property_type']) : ?>
+                                            <div class="info-item">
+                                                <strong><?php _e('Property Type', 'houses-theme'); ?>:</strong>
+                                                <span class="property-type"><?php echo esc_html(ucfirst($property['property_type'])); ?></span>
+                                            </div>
+                                        <?php endif; ?>
+                                        
+                                        <?php if ($property['bedroom']) : ?>
+                                            <div class="info-item">
+                                                <strong><?php _e('Bedrooms', 'houses-theme'); ?>:</strong>
+                                                <span class="bedroom-count"><?php echo esc_html($property['bedroom']); ?></span>
+                                            </div>
+                                        <?php endif; ?>
+                                        
+                                        <?php if ($property['bathroom']) : ?>
+                                            <div class="info-item">
+                                                <strong><?php _e('Bathrooms', 'houses-theme'); ?>:</strong>
+                                                <span class="bathroom-count"><?php echo esc_html($property['bathroom']); ?></span>
+                                            </div>
+                                        <?php endif; ?>
+                                        
+                                        <?php if ($property['net_size']) : ?>
+                                            <div class="info-item">
+                                                <strong><?php _e('Net Size', 'houses-theme'); ?>:</strong>
+                                                <span class="size"><?php echo esc_html($property['net_size']); ?> m²</span>
+                                            </div>
+                                        <?php endif; ?>
+                                        
+                                        <?php if ($property['square_meters']) : ?>
+                                            <div class="info-item">
+                                                <strong><?php _e('Square Meters', 'houses-theme'); ?>:</strong>
+                                                <span><?php echo esc_html($property['square_meters']); ?></span>
+                                            </div>
+                                        <?php endif; ?>
+                                        
+                                        <?php if ($property['floor'] || $property['total_floor']) : ?>
+                                            <div class="info-item">
+                                                <strong><?php _e('Floor', 'houses-theme'); ?>:</strong>
+                                                <span class="floor-info">
+                                                    <?php if ($property['floor']) echo esc_html($property['floor']); ?>
+                                                    <?php if ($property['total_floor']) echo ' / ' . esc_html($property['total_floor']); ?>
+                                                </span>
+                                            </div>
+                                        <?php endif; ?>
+                                        
+                                        <?php if ($property['building_age']) : ?>
+                                            <div class="info-item">
+                                                <strong><?php _e('Building Age', 'houses-theme'); ?>:</strong>
+                                                <span><?php echo esc_html($property['building_age']); ?> <?php _e('years', 'houses-theme'); ?></span>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+
+                                <!-- Financial Information Section -->
+                                <div class="property-section">
+                                    <h4 class="section-title"><?php _e('💰 Financial Information', 'houses-theme'); ?></h4>
+                                    <div class="info-grid">
+                                        <?php if ($property['rent']) : ?>
+                                            <div class="info-item">
+                                                <strong><?php _e('Rent', 'houses-theme'); ?>:</strong>
+                                                <span class="rent-price">NT$<?php echo esc_html($property['rent']); ?></span>
+                                            </div>
+                                        <?php endif; ?>
+                                        
+                                        <?php if ($property['tax_included']) : ?>
+                                            <div class="info-item">
+                                                <strong><?php _e('Tax Included', 'houses-theme'); ?>:</strong>
+                                                <span class="<?php echo $property['tax_included'] === 'yes' ? 'status-yes' : 'status-no'; ?>">
+                                                    <?php echo $property['tax_included'] === 'yes' ? __('Yes', 'houses-theme') : __('No', 'houses-theme'); ?>
+                                                </span>
+                                            </div>
+                                        <?php endif; ?>
+                                        
+                                        <?php if ($property['management_fee_included']) : ?>
+                                            <div class="info-item">
+                                                <strong><?php _e('Management Fee Included', 'houses-theme'); ?>:</strong>
+                                                <span class="<?php echo $property['management_fee_included'] === 'yes' ? 'status-yes' : 'status-no'; ?>">
+                                                    <?php echo $property['management_fee_included'] === 'yes' ? __('Yes', 'houses-theme') : __('No', 'houses-theme'); ?>
+                                                </span>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+
+                                <!-- Amenities & Features Section -->
+                                <div class="property-section">
+                                    <h4 class="section-title"><?php _e('🏋️ Amenities & Features', 'houses-theme'); ?></h4>
+                                    <div class="info-grid">
+                                        <?php if ($property['parking']) : ?>
+                                            <div class="info-item">
+                                                <strong><?php _e('Parking', 'houses-theme'); ?>:</strong>
+                                                <span class="parking-status">
+                                                    <?php 
+                                                    switch($property['parking']) {
+                                                        case 'yes':
+                                                            echo '<span class="status-yes">' . __('Available', 'houses-theme') . '</span>';
+                                                            break;
+                                                        case 'no':
+                                                            echo '<span class="status-no">' . __('Not Available', 'houses-theme') . '</span>';
+                                                            break;
+                                                        case 'contact_agent':
+                                                            echo '<span class="status-contact">' . __('Contact Agent', 'houses-theme') . '</span>';
+                                                            break;
+                                                        default:
+                                                            echo esc_html($property['parking']);
+                                                    }
+                                                    ?>
+                                                </span>
+                                            </div>
+                                        <?php endif; ?>
+                                        
+                                        <?php if ($property['gym']) : ?>
+                                            <div class="info-item">
+                                                <strong><?php _e('Gym', 'houses-theme'); ?>:</strong>
+                                                <span class="<?php echo $property['gym'] === 'yes' ? 'status-yes' : 'status-no'; ?>">
+                                                    <?php echo $property['gym'] === 'yes' ? __('Available', 'houses-theme') : __('Not Available', 'houses-theme'); ?>
+                                                </span>
+                                            </div>
+                                        <?php endif; ?>
+                                        
+                                        <?php if ($property['swimming_pool']) : ?>
+                                            <div class="info-item">
+                                                <strong><?php _e('Swimming Pool', 'houses-theme'); ?>:</strong>
+                                                <span class="<?php echo $property['swimming_pool'] === 'yes' ? 'status-yes' : 'status-no'; ?>">
+                                                    <?php echo $property['swimming_pool'] === 'yes' ? __('Available', 'houses-theme') : __('Not Available', 'houses-theme'); ?>
+                                                </span>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+
+                                <!-- Additional Notes Section -->
+                                <?php if ($property['notes']) : ?>
+                                    <div class="property-section">
+                                        <h4 class="section-title"><?php _e('📝 Additional Notes', 'houses-theme'); ?></h4>
+                                        <div class="notes-content">
+                                            <p><?php echo esc_html($property['notes']); ?></p>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                             
                             <?php if ($property['content']) : ?>

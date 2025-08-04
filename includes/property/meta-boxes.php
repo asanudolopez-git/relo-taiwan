@@ -105,11 +105,10 @@ class Houses_Property_Meta_Boxes
                     'type' => 'number',
                     'class' => '',
                 ),
-                // Gross Size field removed as requested
                 'net_size' => array(
                     'label' => 'Net Size',
                     'type' => 'number',
-                    'step' => '0.01', // Changed to float as requested
+                    'step' => '0.01',
                     'class' => '',
                 ),
                 'square_meters' => array(
@@ -123,20 +122,16 @@ class Houses_Property_Meta_Boxes
                     'options' => array(
                         'apartment' => 'Apartment',
                         'house' => 'House',
-                        // Other property types removed as requested
                     ),
                     'class' => '',
                 ),
-
                 'parking' => array(
                     'label' => 'Parking',
                     'type' => 'select',
                     'options' => array(
-                        'contact_agent' => 'Contact Agent',
                         'yes' => 'Yes',
                         'no' => 'No',
                     ),
-                    'class' => '',
                 ),
             ),
         ),
@@ -361,7 +356,15 @@ class Houses_Property_Meta_Boxes
 
         // Save all fields
         foreach ($this->fields as $section) {
+            if (!isset($section['fields']) || !is_array($section['fields'])) {
+                continue;
+            }
             foreach ($section['fields'] as $field_id => $field) {
+                // Skip if field is not properly defined
+                if (!isset($field['type']) || empty($field['type'])) {
+                    continue;
+                }
+                
                 if ($field['type'] === 'gallery') {
                     // Handle gallery field specially
                     if (isset($_POST[$field_id]) && is_array($_POST[$field_id])) {
@@ -377,6 +380,9 @@ class Houses_Property_Meta_Boxes
                     } else {
                         update_post_meta($post_id, $field_id, sanitize_text_field($_POST[$field_id]));
                     }
+                } else {
+                    // Clear the field if not set in POST data
+                    delete_post_meta($post_id, $field_id);
                 }
             }
         }
