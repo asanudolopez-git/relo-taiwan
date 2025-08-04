@@ -12,9 +12,9 @@ if (!defined('ABSPATH')) {
  */
 function houses_register_district_post_type() {
     $labels = array(
-        'name'               => _x('Districts', 'post type general name', 'houses-theme'),
+        'name'               => _x('District', 'post type general name', 'houses-theme'),
         'singular_name'      => _x('District', 'post type singular name', 'houses-theme'),
-        'menu_name'          => _x('Districts', 'admin menu', 'houses-theme'),
+        'menu_name'          => _x('District', 'admin menu', 'houses-theme'),
         'name_admin_bar'     => _x('District', 'add new on admin bar', 'houses-theme'),
         'add_new'            => _x('Add New', 'district', 'houses-theme'),
         'add_new_item'       => __('Add New District', 'houses-theme'),

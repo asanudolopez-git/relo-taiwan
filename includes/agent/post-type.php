@@ -18,9 +18,9 @@ class Houses_Agent_Post_Type {
      */
     public function register_post_type() {
         $labels = array(
-            'name'               => _x('Agents', 'Post type general name', 'houses-theme'),
+            'name'               => _x('Agent', 'Post type general name', 'houses-theme'),
             'singular_name'      => _x('Agent', 'Post type singular name', 'houses-theme'),
-            'menu_name'          => _x('Agents', 'Admin Menu text', 'houses-theme'),
+            'menu_name'          => _x('Agent', 'Admin Menu text', 'houses-theme'),
             'name_admin_bar'     => _x('Agent', 'Add New on Toolbar', 'houses-theme'),
             'add_new'            => __('Add New', 'houses-theme'),
             'add_new_item'       => __('Add New Agent', 'houses-theme'),
