@@ -102,6 +102,13 @@ class Houses_Client_Lease_Meta_Boxes
                         'type' => 'date',
                         'class' => '',
                     ),
+                    'contract_attachment' => array(
+                        'label' => 'Contract Attachment',
+                        'type' => 'file',
+                        'class' => '',
+                        'description' => 'Upload the signed contract document (PDF, DOC, DOCX)',
+                        'allowed_types' => array('pdf', 'doc', 'docx'),
+                    ),
                 ),
             ),
         );
@@ -315,6 +322,25 @@ class Houses_Client_Lease_Meta_Boxes
         // Add nonce for security
         wp_nonce_field('houses_client_lease_meta_box', 'houses_client_lease_meta_box_nonce');
 
+        // Check if this meta box has file fields
+        $has_file_fields = false;
+        foreach ($meta_box['fields'] as $field) {
+            if (isset($field['type']) && $field['type'] === 'file') {
+                $has_file_fields = true;
+                break;
+            }
+        }
+
+        // Add JavaScript to handle file upload form encoding
+        if ($has_file_fields) {
+            echo '<script>
+            jQuery(document).ready(function($) {
+                // Set form encoding for file uploads
+                $("#post").attr("enctype", "multipart/form-data");
+            });
+            </script>';
+        }
+
         // Output fields
         echo '<table class="form-table">';
         foreach ($meta_box['fields'] as $id => $field) {
@@ -387,6 +413,160 @@ class Houses_Client_Lease_Meta_Boxes
                     value="<?php echo esc_attr($value); ?>">
                 <?php
                 break;
+
+            case 'file':
+                $attachment_id = $value;
+                $file_url = '';
+                $file_name = '';
+                
+                if ($attachment_id) {
+                    $file_url = wp_get_attachment_url($attachment_id);
+                    $file_name = get_the_title($attachment_id);
+                }
+                
+                $allowed_types = isset($field['allowed_types']) ? implode(',', array_map(function($type) { return '.' . $type; }, $field['allowed_types'])) : '';
+                ?>
+                <div class="contract-attachment-field">
+                    <input type="file" id="<?php echo esc_attr($field['id']); ?>" name="<?php echo esc_attr($field['id']); ?>" 
+                           accept="<?php echo esc_attr($allowed_types); ?>" class="widefat">
+                    <input type="hidden" id="<?php echo esc_attr($field['id']); ?>_id" name="<?php echo esc_attr($field['id']); ?>_id" 
+                           value="<?php echo esc_attr($attachment_id); ?>">
+                    
+                    <?php if ($attachment_id && $file_url): ?>
+                        <div class="current-attachment" style="margin-top: 10px; padding: 10px; background: #f9f9f9; border-left: 4px solid #0073aa;">
+                            <strong>Current File:</strong> 
+                            <a href="<?php echo esc_url($file_url); ?>" target="_blank" style="text-decoration: none;">
+                                📄 <?php echo esc_html($file_name ?: basename($file_url)); ?>
+                            </a>
+                            <br>
+                            <small style="color: #666;">Upload a new file to replace the current one</small>
+                            <br>
+                            <button type="button" class="button button-secondary" onclick="removeAttachment('<?php echo esc_attr($field['id']); ?>')" style="margin-top: 5px;">
+                                Remove File
+                            </button>
+                        </div>
+                    <?php endif; ?>
+                </div>
+                
+                <script>
+                function removeAttachment(fieldId) {
+                    if (confirm('Are you sure you want to remove this attachment?')) {
+                        document.getElementById(fieldId + '_id').value = '';
+                        document.querySelector('.current-attachment').style.display = 'none';
+                    }
+                }
+                </script>
+                <?php
+                break;
+        }
+    }
+
+    /**
+     * Handle file uploads
+     */
+    private function handle_file_uploads($post_id)
+    {
+        // Check if WordPress upload functions are available
+        if (!function_exists('wp_handle_upload')) {
+            require_once(ABSPATH . 'wp-admin/includes/file.php');
+        }
+
+        foreach ($this->meta_boxes as $meta_box) {
+            foreach ($meta_box['fields'] as $id => $field) {
+                if (isset($field['type']) && $field['type'] === 'file') {
+                    // Check if file was uploaded
+                    if (isset($_FILES[$id]) && $_FILES[$id]['error'] === UPLOAD_ERR_OK) {
+                        // Validate file type
+                        $allowed_types = isset($field['allowed_types']) ? $field['allowed_types'] : array();
+                        $file_extension = strtolower(pathinfo($_FILES[$id]['name'], PATHINFO_EXTENSION));
+                        
+                        if (!empty($allowed_types) && !in_array($file_extension, $allowed_types)) {
+                            add_action('admin_notices', function() use ($field, $allowed_types) {
+                                echo '<div class="notice notice-error is-dismissible"><p>';
+                                echo 'Invalid file type for ' . esc_html($field['label']) . '. Allowed types: ' . implode(', ', $allowed_types);
+                                echo '</p></div>';
+                            });
+                            continue;
+                        }
+
+                        // Set up upload overrides
+                        $upload_overrides = array(
+                            'test_form' => false,
+                            'mimes' => array(
+                                'pdf' => 'application/pdf',
+                                'doc' => 'application/msword',
+                                'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+                            )
+                        );
+
+                        // Handle the upload
+                        $uploaded_file = wp_handle_upload($_FILES[$id], $upload_overrides);
+
+                        if (!isset($uploaded_file['error'])) {
+                            // Create attachment
+                            $attachment = array(
+                                'post_mime_type' => $uploaded_file['type'],
+                                'post_title' => sanitize_file_name(pathinfo($_FILES[$id]['name'], PATHINFO_FILENAME)),
+                                'post_content' => '',
+                                'post_status' => 'inherit',
+                                'post_parent' => $post_id
+                            );
+
+                            // Insert the attachment
+                            $attachment_id = wp_insert_attachment($attachment, $uploaded_file['file'], $post_id);
+
+                            if (!is_wp_error($attachment_id)) {
+                                // Generate attachment metadata
+                                if (!function_exists('wp_generate_attachment_metadata')) {
+                                    require_once(ABSPATH . 'wp-admin/includes/image.php');
+                                }
+                                $attachment_data = wp_generate_attachment_metadata($attachment_id, $uploaded_file['file']);
+                                wp_update_attachment_metadata($attachment_id, $attachment_data);
+
+                                // Delete old attachment if exists
+                                $old_attachment_id = get_post_meta($post_id, $id, true);
+                                if ($old_attachment_id && $old_attachment_id != $attachment_id) {
+                                    wp_delete_attachment($old_attachment_id, true);
+                                }
+
+                                // Save the attachment ID
+                                update_post_meta($post_id, $id, $attachment_id);
+
+                                // Add success notice
+                                add_action('admin_notices', function() use ($field) {
+                                    echo '<div class="notice notice-success is-dismissible"><p>';
+                                    echo esc_html($field['label']) . ' uploaded successfully!';
+                                    echo '</p></div>';
+                                });
+                            }
+                        } else {
+                            // Add error notice
+                            add_action('admin_notices', function() use ($field, $uploaded_file) {
+                                echo '<div class="notice notice-error is-dismissible"><p>';
+                                echo 'Error uploading ' . esc_html($field['label']) . ': ' . esc_html($uploaded_file['error']);
+                                echo '</p></div>';
+                            });
+                        }
+                    }
+                    // Handle file removal
+                    elseif (isset($_POST[$id . '_id'])) {
+                        $current_attachment_id = get_post_meta($post_id, $id, true);
+                        $posted_attachment_id = sanitize_text_field($_POST[$id . '_id']);
+                        
+                        // If the posted ID is empty but we have a current attachment, remove it
+                        if (empty($posted_attachment_id) && !empty($current_attachment_id)) {
+                            wp_delete_attachment($current_attachment_id, true);
+                            delete_post_meta($post_id, $id);
+                            
+                            add_action('admin_notices', function() use ($field) {
+                                echo '<div class="notice notice-success is-dismissible"><p>';
+                                echo esc_html($field['label']) . ' removed successfully!';
+                                echo '</p></div>';
+                            });
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -415,9 +595,17 @@ class Houses_Client_Lease_Meta_Boxes
             return;
         }
 
+        // Handle file uploads first
+        $this->handle_file_uploads($post_id);
+
         // Save fields
         foreach ($this->meta_boxes as $meta_box) {
             foreach ($meta_box['fields'] as $id => $field) {
+                // Skip file fields as they are handled separately
+                if (isset($field['type']) && $field['type'] === 'file') {
+                    continue;
+                }
+
                 if (isset($_POST[$id])) {
                     $value = $_POST[$id];
 
