@@ -2,8 +2,8 @@
 function register_customer_house_list_post_type()
 {
     $labels = array(
-        'name' => __('Assignee House Lists', 'houses-theme'),
-        'singular_name' => __('Assignee House List', 'houses-theme'),
+        'name' => __('House List', 'houses-theme'),
+        'singular_name' => __('House List', 'houses-theme'),
         'add_new' => __('Add New List', 'houses-theme'),
         'add_new_item' => __('Add New House List', 'houses-theme'),
         'edit_item' => __('Edit House List', 'houses-theme'),
@@ -12,7 +12,7 @@ function register_customer_house_list_post_type()
         'search_items' => __('Search House Lists', 'houses-theme'),
         'not_found' => __('No house lists found', 'houses-theme'),
         'not_found_in_trash' => __('No house lists found in trash', 'houses-theme'),
-        'menu_name' => __('House Lists', 'houses-theme'),
+        'menu_name' => __('House List', 'houses-theme'),
     );
 
     $args = array(

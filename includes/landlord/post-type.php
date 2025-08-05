@@ -12,9 +12,9 @@ if (!defined('ABSPATH')) {
  */
 function houses_register_landlord_post_type() {
     $labels = array(
-        'name'                  => _x('Landlords', 'Post type general name', 'houses-theme'),
+        'name'                  => _x('Landlord', 'Post type general name', 'houses-theme'),
         'singular_name'         => _x('Landlord', 'Post type singular name', 'houses-theme'),
-        'menu_name'             => _x('Landlords', 'Admin Menu text', 'houses-theme'),
+        'menu_name'             => _x('Landlord', 'Admin Menu text', 'houses-theme'),
         'name_admin_bar'        => _x('Landlord', 'Add New on Toolbar', 'houses-theme'),
         'add_new'               => __('Add New', 'houses-theme'),
         'add_new_item'          => __('Add New Landlord', 'houses-theme'),

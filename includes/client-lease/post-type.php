@@ -5,7 +5,7 @@
 function register_client_lease_post_type()
 {
     $labels = array(
-        'name' => __('Client Lease Summaries', 'houses-theme'),
+        'name' => __('Lease Summary', 'houses-theme'),
         'singular_name' => __('Lease Summary', 'houses-theme'),
         'add_new' => __('Add New Lease', 'houses-theme'),
         'add_new_item' => __('Add New Lease', 'houses-theme'),
@@ -15,7 +15,7 @@ function register_client_lease_post_type()
         'search_items' => __('Search Leases', 'houses-theme'),
         'not_found' => __('No leases found', 'houses-theme'),
         'not_found_in_trash' => __('No leases found in trash', 'houses-theme'),
-        'menu_name' => __('Client Lease Summaries', 'houses-theme'),
+        'menu_name' => __('Lease Summary', 'houses-theme'),
     );
 
     $args = array(

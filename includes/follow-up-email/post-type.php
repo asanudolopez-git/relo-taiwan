@@ -4,7 +4,7 @@
  */
 function register_follow_up_email_post_type() {
     $labels = array(
-        'name'               => __('Follow-up Emails', 'houses-theme'),
+        'name'               => __('Follow-up Email', 'houses-theme'),
         'singular_name'      => __('Follow-up Email', 'houses-theme'),
         'add_new'            => __('Add New Email', 'houses-theme'),
         'add_new_item'       => __('Add New Follow-up Email', 'houses-theme'),
@@ -14,7 +14,7 @@ function register_follow_up_email_post_type() {
         'search_items'       => __('Search Emails', 'houses-theme'),
         'not_found'          => __('No emails found', 'houses-theme'),
         'not_found_in_trash' => __('No emails found in trash', 'houses-theme'),
-        'menu_name'          => __('Follow-up Emails', 'houses-theme'),
+        'menu_name'          => __('Follow-up Email', 'houses-theme'),
     );
 
     $args = array(

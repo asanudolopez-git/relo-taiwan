@@ -14,9 +14,9 @@ if (!defined('ABSPATH')) {
  */
 function houses_register_home_viewing_post_type() {
     $labels = array(
-        'name'                  => _x('Home Viewings', 'Post type general name', 'houses-theme'),
+        'name'                  => _x('Home Viewing', 'Post type general name', 'houses-theme'),
         'singular_name'         => _x('Home Viewing', 'Post type singular name', 'houses-theme'),
-        'menu_name'            => _x('Home Viewings', 'Admin Menu text', 'houses-theme'),
+        'menu_name'            => _x('Home Viewing', 'Admin Menu text', 'houses-theme'),
         'add_new'              => __('Add New', 'houses-theme'),
         'add_new_item'         => __('Add New Home Viewing', 'houses-theme'),
         'edit_item'            => __('Edit Home Viewing', 'houses-theme'),

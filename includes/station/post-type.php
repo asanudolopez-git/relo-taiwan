@@ -12,9 +12,9 @@ if (!defined('ABSPATH')) {
  */
 function houses_register_station_post_type() {
     $labels = array(
-        'name'               => _x('Stations', 'post type general name', 'houses-theme'),
+        'name'               => _x('Station', 'post type general name', 'houses-theme'),
         'singular_name'      => _x('Station', 'post type singular name', 'houses-theme'),
-        'menu_name'          => _x('Stations', 'admin menu', 'houses-theme'),
+        'menu_name'          => _x('Station', 'admin menu', 'houses-theme'),
         'name_admin_bar'     => _x('Station', 'add new on admin bar', 'houses-theme'),
         'add_new'            => _x('Add New', 'station', 'houses-theme'),
         'add_new_item'       => __('Add New Station', 'houses-theme'),

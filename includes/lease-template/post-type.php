@@ -12,9 +12,9 @@ if (!defined('ABSPATH')) {
  */
 function houses_register_lease_template_post_type() {
     $labels = array(
-        'name'                  => _x('Lease Templates', 'Post type general name', 'houses-theme'),
+        'name'                  => _x('Lease Template', 'Post type general name', 'houses-theme'),
         'singular_name'         => _x('Lease Template', 'Post type singular name', 'houses-theme'),
-        'menu_name'             => _x('Lease Templates', 'Admin Menu text', 'houses-theme'),
+        'menu_name'             => _x('Lease Template', 'Admin Menu text', 'houses-theme'),
         'name_admin_bar'        => _x('Lease Template', 'Add New on Toolbar', 'houses-theme'),
         'add_new'               => __('Add New', 'houses-theme'),
         'add_new_item'          => __('Add New Lease Template', 'houses-theme'),

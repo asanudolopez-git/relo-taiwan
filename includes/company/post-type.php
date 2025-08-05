@@ -4,7 +4,7 @@
  */
 function register_company_post_type() {
     $labels = array(
-        'name'               => __('Companies', 'houses-theme'),
+        'name'               => __('Company', 'houses-theme'),
         'singular_name'      => __('Company', 'houses-theme'),
         'add_new'            => __('Add New Company', 'houses-theme'),
         'add_new_item'       => __('Add New Company', 'houses-theme'),
@@ -14,7 +14,7 @@ function register_company_post_type() {
         'search_items'       => __('Search Companies', 'houses-theme'),
         'not_found'          => __('No companies found', 'houses-theme'),
         'not_found_in_trash' => __('No companies found in trash', 'houses-theme'),
-        'menu_name'          => __('Companies', 'houses-theme'),
+        'menu_name'          => __('Company', 'houses-theme'),
     );
 
     $args = array(
