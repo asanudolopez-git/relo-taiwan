@@ -336,6 +336,15 @@ class Houses_Client_Meta_Boxes
             'normal',
             'default'
         );
+
+        add_meta_box(
+            'houses_customer_related_entities',
+            'Related Services',
+            array($this, 'render_related_entities'),
+            'customer',
+            'side',
+            'high'
+        );
     }
 
     /**
@@ -523,6 +532,123 @@ class Houses_Client_Meta_Boxes
                 echo '</div>';
             }
         }
+    }
+
+    /**
+     * Render related entities navigation
+     */
+    public function render_related_entities($post)
+    {
+        $customer_id = $post->ID;
+        
+        echo '<div class="related-entities-navigation">';
+        echo '<style>
+       
+        </style>';
+        
+        // Client Lease Summary
+        echo '<div class="related-entity-section">';
+        echo '<h4>Client Lease Summary</h4>';
+        $lease_summaries = get_posts(array(
+            'post_type' => 'client_lease',
+            'meta_query' => array(
+                array(
+                    'key' => 'client_id',
+                    'value' => $customer_id,
+                    'compare' => '='
+                )
+            ),
+            'posts_per_page' => -1
+        ));
+        
+        if (!empty($lease_summaries)) {
+            echo '<div class="related-entity-links">';
+            foreach ($lease_summaries as $lease) {
+                $edit_url = admin_url('post.php?post=' . $lease->ID . '&action=edit');
+                echo '<a href="' . esc_url($edit_url) . '" class="related-entity-link">';
+                echo esc_html($lease->post_title ?: 'Lease Summary #' . $lease->ID);
+                echo '</a>';
+            }
+            echo '</div>';
+        } else {
+            echo '<div class="no-entities">No lease summaries found</div>';
+            // Add new lease summary link only when no records exist
+            $new_lease_url = admin_url('post-new.php?post_type=client_lease&client_id=' . $customer_id);
+            echo '<a href="' . esc_url($new_lease_url) . '" class="related-entity-link" style="background: #00a32a; margin-top: 5px;">';
+            echo '+ Add New Lease Summary';
+            echo '</a>';
+        }
+        echo '</div>';
+        $first_lease = $lease_summaries[0];
+        // Settling In Services (Accommodation)
+        echo '<div class="related-entity-section">';
+        echo '<h4>Settling In Services</h4>';
+        $accommodations = get_posts(array(
+            'post_type' => 'accommodation',
+            'meta_query' => array(
+                array(
+                    'key' => 'client_lease_id',
+                    'value' => $first_lease->ID,
+                    'compare' => '='
+                )
+            ),
+            'posts_per_page' => -1
+        ));
+        
+        if (!empty($accommodations)) {
+            echo '<div class="related-entity-links">';
+            foreach ($accommodations as $accommodation) {
+                $edit_url = admin_url('post.php?post=' . $accommodation->ID . '&action=edit');
+                echo '<a href="' . esc_url($edit_url) . '" class="related-entity-link">';
+                echo esc_html($accommodation->post_title ?: 'Settling In Service #' . $accommodation->ID);
+                echo '</a>';
+            }
+            echo '</div>';
+        } else {
+            echo '<div class="no-entities">No settling in services found</div>';
+            // Add new accommodation link only when no records exist
+            $new_accommodation_url = admin_url('post-new.php?post_type=accommodation&client_id=' . $customer_id);
+            echo '<a href="' . esc_url($new_accommodation_url) . '" class="related-entity-link" style="background: #00a32a; margin-top: 5px;">';
+            echo '+ Add New Settling In Service';
+            echo '</a>';
+        }
+        echo '</div>';
+        
+        // Departure Services
+        echo '<div class="related-entity-section">';
+        echo '<h4>Departure Services</h4>';
+        $departure_services = get_posts(array(
+            'post_type' => 'departure_service',
+            'meta_query' => array(
+                array(
+                    'key' => 'customer_id',
+                    'value' => $customer_id,
+                    'compare' => '='
+                )
+            ),
+            'posts_per_page' => -1
+        ));
+        
+        if (!empty($departure_services)) {
+            echo '<div class="related-entity-links">';
+            foreach ($departure_services as $service) {
+                $edit_url = admin_url('post.php?post=' . $service->ID . '&action=edit');
+                echo '<a href="' . esc_url($edit_url) . '" class="related-entity-link">';
+                echo esc_html($service->post_title ?: 'Departure Service #' . $service->ID);
+                echo '</a>';
+            }
+            echo '</div>';
+        } else {
+            echo '<div class="no-entities">No departure services found</div>';
+            // Add new departure service link only when no records exist
+            $new_departure_url = admin_url('post-new.php?post_type=departure_service&client_id=' . $customer_id);
+            echo '<a href="' . esc_url($new_departure_url) . '" class="related-entity-link" style="background: #00a32a; margin-top: 5px;">';
+            echo '+ Add New Departure Service';
+            echo '</a>';
+        }
+        echo '</div>';
+        
+        echo '</div>';
     }
 
     /**
