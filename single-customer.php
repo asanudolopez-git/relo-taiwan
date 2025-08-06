@@ -223,6 +223,9 @@ while (have_posts()) : the_post();
             'extension_authorized_date'=> get_post_meta($lease_id, 'extension_authorized_date', true),
             'extension_period'         => get_post_meta($lease_id, 'extension_period', true),
             'extension_signed_date'    => get_post_meta($lease_id, 'extension_signed_date', true),
+            'contract_attachment'      => get_post_meta($lease_id, 'contract_attachment', true),
+            'status'                   => get_post_meta($lease_id, 'status', true),
+            'notes'                    => get_post_meta($lease_id, 'notes', true),
         );
         $lease_data['property_title'] = $lease_data['property_id'] ? get_the_title($lease_data['property_id']) : '';
         
@@ -355,18 +358,46 @@ while (have_posts()) : the_post();
                     
                     <!-- Lease Information -->
                     <div class="lease-info">
-                        <h3><?php _e('Lease Details', 'houses-theme'); ?></h3>
+                        <h3><a href="<?php echo esc_url(admin_url('post.php?post=' . $lease_id . '&action=edit')); ?>" target="_blank" title="Click para editar este lease" style="text-decoration: none; color: inherit; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.color='#0073aa'; this.querySelector('.dashicons').style.opacity='1';" onmouseout="this.style.color='inherit'; this.querySelector('.dashicons').style.opacity='0.7';"><?php _e('Lease Details', 'houses-theme'); ?> <span class="dashicons dashicons-edit" style="font-size: 16px; opacity: 0.7; margin-left: 8px; color: #0073aa;"></span></a></h3>
                         <ul>
                             <?php if ($lease_data['start_date'])    : ?><li><strong><?php _e('Start Date', 'houses-theme'); ?>:</strong> <?php echo esc_html($lease_data['start_date']); ?></li><?php endif; ?>
                             <?php if ($lease_data['end_date'])      : ?><li><strong><?php _e('End Date', 'houses-theme'); ?>:</strong> <?php echo esc_html($lease_data['end_date']); ?></li><?php endif; ?>
                             <?php if ($lease_data['monthly_rent'])  : ?><li><strong><?php _e('Monthly Rent', 'houses-theme'); ?>:</strong> <?php echo esc_html($lease_data['monthly_rent']); ?></li><?php endif; ?>
                             <?php if ($lease_data['deposit'])       : ?><li><strong><?php _e('Deposit', 'houses-theme'); ?>:</strong> <?php echo esc_html($lease_data['deposit']); ?></li><?php endif; ?>
+                            <?php if ($lease_data['notes'])        : ?><li><strong><?php _e('Notes', 'houses-theme'); ?>:</strong> <?php echo esc_html($lease_data['notes']); ?></li><?php endif; ?>
+                            <?php if ($lease_data['status'])       : ?><li><strong><?php _e('Status', 'houses-theme'); ?>:</strong> <?php echo esc_html($lease_data['status']); ?></li><?php endif; ?>
+                            <?php if ($lease_data['contract_attachment']) : ?>
+                                <?php 
+                                $attachment_id = $lease_data['contract_attachment'];
+                                $attachment_url = wp_get_attachment_url($attachment_id);
+                                $attachment_title = get_the_title($attachment_id);
+                                $attachment_filename = basename(get_attached_file($attachment_id));
+                                ?>
+                                <li><strong><?php _e('Contract', 'houses-theme'); ?>:</strong> 
+                                    <a href="<?php echo esc_url($attachment_url); ?>" target="_blank" style="color: #0073aa; text-decoration: none;" title="Click para descargar el contrato">
+                                        <span class="dashicons dashicons-media-document" style="font-size: 16px; vertical-align: middle; margin-right: 5px;"></span>
+                                        <?php echo esc_html($attachment_filename ? $attachment_filename : $attachment_title); ?>
+                                    </a>
+                                </li>
+                            <?php endif; ?>
                         </ul>
                     </div>
+
+                    <!-- Extension -->
+                    <?php if ($lease && ($lease_data['extension_authorized_date'] || $lease_data['extension_signed_date'] || $lease_data['extension_period'])) : ?>
+                        <div class="section extension">
+                            <h2><?php _e('Extension', 'houses-theme'); ?></h2>
+                            <ul>
+                                <?php if ($lease_data['extension_authorized_date']): ?><li><strong><?php _e('Authorized Date', 'houses-theme'); ?>:</strong> <?php echo esc_html($lease_data['extension_authorized_date']); ?></li><?php endif; ?>
+                                <?php if ($lease_data['extension_period']): ?><li><strong><?php _e('Period (months)', 'houses-theme'); ?>:</strong> <?php echo esc_html($lease_data['extension_period']); ?></li><?php endif; ?>
+                                <?php if ($lease_data['extension_signed_date']): ?><li><strong><?php _e('Signed Date', 'houses-theme'); ?>:</strong> <?php echo esc_html($lease_data['extension_signed_date']); ?></li><?php endif; ?>
+                            </ul>
+                        </div>
+                    <?php endif; ?>
                     
                     <!-- Property Details -->
                     <div class="property-details">
-                        <h3><?php echo esc_html($lease_property_details['title']); ?></h3>
+                        <h3><a href="<?php echo esc_url(admin_url('post.php?post=' . $lease_property_details['id'] . '&action=edit')); ?>" target="_blank" title="Click para editar esta propiedad" style="text-decoration: none; color: inherit; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.color='#0073aa'; this.querySelector('.dashicons').style.opacity='1';" onmouseout="this.style.color='inherit'; this.querySelector('.dashicons').style.opacity='0.7';"><?php echo esc_html($lease_property_details['title']); ?> <span class="dashicons dashicons-edit" style="font-size: 16px; opacity: 0.7; margin-left: 8px; color: #0073aa;"></span></a></h3>
                         
                         <!-- Property Gallery -->
                         <?php if (!empty($lease_property_details['gallery_images']) && is_array($lease_property_details['gallery_images'])) : ?>
@@ -596,7 +627,7 @@ while (have_posts()) : the_post();
                     
                     <?php foreach ($house_list_properties as $property) : ?>
                         <div class="property-card">
-                            <h3><?php echo esc_html($property['title']); ?></h3>
+                            <h3><a href="<?php echo esc_url(admin_url('post.php?post=' . $property['id'] . '&action=edit')); ?>" target="_blank" title="Click para editar esta propiedad" style="text-decoration: none; color: inherit; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.color='#0073aa'; this.querySelector('.dashicons').style.opacity='1';" onmouseout="this.style.color='inherit'; this.querySelector('.dashicons').style.opacity='0.7';"><?php echo esc_html($property['title']); ?> <span class="dashicons dashicons-edit" style="font-size: 16px; opacity: 0.7; margin-left: 8px; color: #0073aa;"></span></a></h3>
                             
                             <!-- Property Gallery -->
                             <?php if (!empty($property['gallery_images']) && is_array($property['gallery_images'])) : ?>
@@ -834,7 +865,7 @@ while (have_posts()) : the_post();
                             });
                             ?>
                             <div class="house-list-pdf-group">
-                                <h3><?php echo esc_html(get_the_title($house_list->ID)); ?></h3>
+                                <h3><a href="<?php echo esc_url(admin_url('post.php?post=' . $house_list->ID . '&action=edit')); ?>" target="_blank" title="Click para editar esta lista de casas" style="text-decoration: none; color: inherit; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.color='#0073aa'; this.querySelector('.dashicons').style.opacity='1';" onmouseout="this.style.color='inherit'; this.querySelector('.dashicons').style.opacity='0.7';"><?php echo esc_html(get_the_title($house_list->ID)); ?> <span class="dashicons dashicons-edit" style="font-size: 16px; opacity: 0.7; margin-left: 8px; color: #0073aa;"></span></a></h3>
                                 <div class="pdf-list">
                                     <?php foreach ($generated_pdfs as $pdf) : ?>
                                         <div class="pdf-item">
@@ -854,7 +885,7 @@ while (have_posts()) : the_post();
                             </div>
                         <?php else : ?>
                             <div class="house-list-pdf-group">
-                                <h3><?php echo esc_html(get_the_title($house_list->ID)); ?></h3>
+                                <h3><a href="<?php echo esc_url(admin_url('post.php?post=' . $house_list->ID . '&action=edit')); ?>" target="_blank" title="Click para editar esta lista de casas" style="text-decoration: none; color: inherit; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.color='#0073aa'; this.querySelector('.dashicons').style.opacity='1';" onmouseout="this.style.color='inherit'; this.querySelector('.dashicons').style.opacity='0.7';"><?php echo esc_html(get_the_title($house_list->ID)); ?> <span class="dashicons dashicons-edit" style="font-size: 16px; opacity: 0.7; margin-left: 8px; color: #0073aa;"></span></a></h3>
                                 <p><?php _e('No PDFs have been generated for this house list yet.', 'houses-theme'); ?></p>
                             </div>
                         <?php endif; ?>
@@ -869,7 +900,7 @@ while (have_posts()) : the_post();
                     <div class="services-list">
                         <?php foreach ($settling_services as $service) : ?>
                             <div class="service-item">
-                                <h4><?php echo esc_html(get_the_title($service)); ?></h4>
+                                <h4><a href="<?php echo esc_url(admin_url('post.php?post=' . $service->ID . '&action=edit')); ?>" target="_blank" title="Click para editar este servicio de acomodación" style="text-decoration: none; color: inherit; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.color='#0073aa'; this.querySelector('.dashicons').style.opacity='1';" onmouseout="this.style.color='inherit'; this.querySelector('.dashicons').style.opacity='0.7';"><?php echo esc_html(get_the_title($service)); ?> <span class="dashicons dashicons-edit" style="font-size: 14px; opacity: 0.7; margin-left: 8px; color: #0073aa;"></span></a></h4>
                                 
                                 <!-- Basic Information -->
                                 <?php 
@@ -1025,17 +1056,7 @@ while (have_posts()) : the_post();
                 <?php endif; ?>
             </div>
 
-            <!-- Extension -->
-            <?php if ($lease && ($lease_data['extension_authorized_date'] || $lease_data['extension_signed_date'] || $lease_data['extension_period'])) : ?>
-                <div class="section extension">
-                    <h2><?php _e('Extension', 'houses-theme'); ?></h2>
-                    <ul>
-                        <?php if ($lease_data['extension_authorized_date']): ?><li><strong><?php _e('Authorized Date', 'houses-theme'); ?>:</strong> <?php echo esc_html($lease_data['extension_authorized_date']); ?></li><?php endif; ?>
-                        <?php if ($lease_data['extension_period']): ?><li><strong><?php _e('Period (months)', 'houses-theme'); ?>:</strong> <?php echo esc_html($lease_data['extension_period']); ?></li><?php endif; ?>
-                        <?php if ($lease_data['extension_signed_date']): ?><li><strong><?php _e('Signed Date', 'houses-theme'); ?>:</strong> <?php echo esc_html($lease_data['extension_signed_date']); ?></li><?php endif; ?>
-                    </ul>
-                </div>
-            <?php endif; ?>
+            
 
             <!-- Departure Services -->
             <div class="section departure-services">
@@ -1044,7 +1065,7 @@ while (have_posts()) : the_post();
                     <div class="services-list">
                         <?php foreach ($departure_services as $service) : ?>
                             <div class="service-item">
-                                <h4><?php echo esc_html(get_the_title($service)); ?></h4>
+                                <h4><a href="<?php echo esc_url(admin_url('post.php?post=' . $service->ID . '&action=edit')); ?>" target="_blank" title="Click para editar este servicio de salida" style="text-decoration: none; color: inherit; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.color='#0073aa'; this.querySelector('.dashicons').style.opacity='1';" onmouseout="this.style.color='inherit'; this.querySelector('.dashicons').style.opacity='0.7';"><?php echo esc_html(get_the_title($service)); ?> <span class="dashicons dashicons-edit" style="font-size: 14px; opacity: 0.7; margin-left: 8px; color: #0073aa;"></span></a></h4>
                                 <?php 
                                 // Get departure service details
                                 $departure_date = get_post_meta($service->ID, 'departure_date', true);
