@@ -1094,8 +1094,8 @@ while (have_posts()) : the_post();
                                             <span class="pdf-type <?php echo esc_attr($pdf['type']); ?>">
                                                 (<?php echo ($pdf['type'] === 'with_images') ? __('With Images', 'houses-theme') : __('No Images', 'houses-theme'); ?>)
                                             </span>
-                                            <span class="pdf-date">
-                                                <?php echo date('M d, Y H:i', strtotime($pdf['date_created'])); ?>
+                                            <span class="pdf-date pdf-local-datetime" data-utc="<?php echo esc_attr($pdf['date_created']); ?>">
+                                                <?php echo esc_html(date('M d, Y H:i', strtotime($pdf['date_created']))); ?>
                                             </span>
                                         </div>
                                     <?php endforeach; ?>
@@ -1108,6 +1108,28 @@ while (have_posts()) : the_post();
                             </div>
                         <?php endif; ?>
                     <?php endforeach; ?>
+                    <script type="text/javascript">
+                    (function() {
+                        function pad(n){ return (n < 10 ? '0' : '') + n; }
+                        function convertToLocal(){
+                            var nodes = document.querySelectorAll('.house-list-pdfs .pdf-local-datetime');
+                            for (var i = 0; i < nodes.length; i++) {
+                                var el = nodes[i];
+                                var utcStr = el.getAttribute('data-utc');
+                                if (utcStr && utcStr.length > 0) {
+                                    var d = new Date(utcStr.replace(' ', 'T') + 'Z');
+                                    if (!isNaN(d.getTime())) {
+                                        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+                                        el.textContent = months[d.getMonth()] + ' ' + pad(d.getDate()) + ', ' + d.getFullYear() + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+                                    }
+                                }
+                            }
+                        }
+                        // Run now and once more shortly after
+                        convertToLocal();
+                        setTimeout(convertToLocal, 100);
+                    })();
+                    </script>
                 </div>
             <?php endif; ?>
 

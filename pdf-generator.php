@@ -275,7 +275,7 @@ function generate_customer_house_list_pdf() {
             'file_path' => $file_path,
             'file_url' => $file_url,
             'type' => 'with_images',
-            'date_created' => current_time('mysql'),
+            'date_created' => gmdate('Y-m-d H:i:s'), // Store as UTC
             'post_id' => $post_id
         );
         
@@ -447,7 +447,7 @@ function generate_customer_house_list_pdf_noimg() {
             'file_path' => $file_path,
             'file_url' => $file_url,
             'type' => 'no_images',
-            'date_created' => current_time('mysql'),
+            'date_created' => gmdate('Y-m-d H:i:s'), // Store as UTC
             'post_id' => $post_id
         );
         
