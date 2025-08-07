@@ -15,6 +15,47 @@
 // Add custom styles for PDF section
 function add_customer_pdf_styles() {
     echo '<style>
+    /* Accordion styles */
+    .accordion-header {
+        cursor: pointer;
+        padding: 15px;
+        background-color: #f1f1f1;
+        border: 1px solid #ddd;
+        margin: 0;
+        font-size: 18px;
+        font-weight: bold;
+        color: #23282d;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: background-color 0.3s ease;
+    }
+    
+    .accordion-header:hover {
+        background-color: #e1e1e1;
+    }
+    
+    .accordion-header::after {
+        content: "\25BC";
+        font-size: 14px;
+        transition: transform 0.3s ease;
+    }
+    
+    .accordion-header.collapsed::after {
+        transform: rotate(-90deg);
+    }
+    
+    .accordion-content {
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-top: none;
+        display: block;
+    }
+    
+    .accordion-content.collapsed {
+        display: none;
+    }
+    
     .house-list-pdfs .house-list-pdf-group {
         margin-bottom: 30px;
         padding: 20px;
@@ -22,51 +63,216 @@ function add_customer_pdf_styles() {
         border-radius: 5px;
         border: 1px solid #ddd;
     }
+    
     .house-list-pdfs h3 {
         margin-top: 0;
         color: #23282d;
         border-bottom: 1px solid #0073aa;
         padding-bottom: 10px;
     }
+    
     .pdf-item {
         display: flex;
         align-items: center;
         padding: 10px 0;
         border-bottom: 1px solid #eee;
     }
+    
     .pdf-item:last-child {
         border-bottom: none;
     }
+    
     .pdf-item .dashicons {
         color: #0073aa;
         margin-right: 10px;
         font-size: 20px;
     }
+    
     .pdf-item a {
         text-decoration: none;
         color: #0073aa;
         font-weight: 500;
         margin-right: 10px;
     }
+    
     .pdf-item a:hover {
         text-decoration: underline;
     }
+    
     .pdf-type.with_images {
         color: #0073aa;
         font-weight: bold;
     }
+    
     .pdf-type.no_images {
         color: #00a32a;
         font-weight: bold;
     }
+    
     .pdf-date {
         color: #666;
         font-size: 14px;
         margin-left: auto;
     }
+    
+    /* Property card styles */
+    .property-card {
+        margin-bottom: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+    
+    .property-card:last-child {
+        margin-bottom: 0;
+    }
+    
+    .property-card .property-title {
+        cursor: pointer;
+        padding: 15px;
+        background-color: #f8f9fa;
+        margin: 0;
+        font-size: 16px;
+        font-weight: bold;
+        color: #23282d;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s ease;
+        border-left: 4px solid #0073aa;
+        position: relative;
+    }
+    
+    .property-card .property-title:hover {
+        background-color: #e8f4f8;
+        border-left-color: #005a87;
+    }
+    
+    .property-card .property-title .title-text {
+        flex: 1;
+        margin-right: 10px;
+    }
+    
+    .property-card .property-title .title-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .property-card .property-title .accordion-arrow {
+        font-size: 12px;
+        transition: transform 0.3s ease;
+        color: #666;
+    }
+    
+    .property-card .property-title.collapsed .accordion-arrow {
+        transform: rotate(-90deg);
+    }
+    
+    .property-card .property-details {
+        padding: 15px;
+        border-top: 1px solid #ddd;
+        display: block;
+    }
+    
+    .property-card .property-details.collapsed {
+        display: none;
+    }
+    
+    .property-card .edit-link {
+        text-decoration: none;
+        color: #666;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        padding: 5px;
+        border-radius: 3px;
+        display: flex;
+        align-items: center;
+        background-color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .property-card .edit-link:hover {
+        color: #0073aa;
+        background-color: rgba(255, 255, 255, 1);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .property-card .edit-link .dashicons {
+        font-size: 16px;
+        opacity: 0.8;
+        transition: opacity 0.3s ease;
+    }
+    
+    .property-card .edit-link:hover .dashicons {
+        opacity: 1;
+    }
     </style>';
 }
 add_action('wp_head', 'add_customer_pdf_styles');
+
+/**
+ * Add JavaScript for accordion functionality
+ */
+function add_customer_accordion_script() {
+    echo '<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Get all accordion headers
+        const accordionHeaders = document.querySelectorAll(".accordion-header");
+        
+        // Add click event to each header
+        accordionHeaders.forEach(function(header) {
+            header.addEventListener("click", function() {
+                // Toggle collapsed class on header
+                this.classList.toggle("collapsed");
+                
+                // Get the next sibling (content) and toggle collapsed class
+                const content = this.nextElementSibling;
+                if (content) {
+                    content.classList.toggle("collapsed");
+                }
+            });
+        });
+        
+        // Collapse all sections by default except basic info
+        const sectionsToCollapse = document.querySelectorAll(".section:not(.basic-info)");
+        sectionsToCollapse.forEach(function(section) {
+            const header = section.querySelector(".accordion-header");
+            const content = section.querySelector(".accordion-content");
+            
+            if (header && content) {
+                header.classList.add("collapsed");
+                content.classList.add("collapsed");
+            }
+        });
+        
+        // Handle property card accordions
+        const propertyTitles = document.querySelectorAll(".property-card .property-title");
+        propertyTitles.forEach(function(title) {
+            // Initially collapse all property cards
+            title.classList.add("collapsed");
+            const details = title.nextElementSibling;
+            if (details && details.classList.contains("property-details")) {
+                details.classList.add("collapsed");
+            }
+            
+            // Add click event to toggle property details
+            title.addEventListener("click", function(event) {
+                // Do not trigger accordion if clicking on edit link
+                if (event.target.closest(".edit-link")) {
+                    return;
+                }
+                
+                this.classList.toggle("collapsed");
+                const details = this.nextElementSibling;
+                if (details && details.classList.contains("property-details")) {
+                    details.classList.toggle("collapsed");
+                }
+            });
+        });
+    });
+    </script>';
+}
+add_action('wp_head', 'add_customer_accordion_script');
 
 /**
  * Get complete property details including gallery
@@ -336,8 +542,9 @@ while (have_posts()) : the_post();
 
             <!-- Basic Information -->
             <div class="section basic-info">
-                <h2><?php _e('Basic Information', 'houses-theme'); ?></h2>
-                <ul>
+                <h2 class="accordion-header"><?php _e('Basic Information', 'houses-theme'); ?></h2>
+                <div class="accordion-content">
+                <div class="info-grid">
                     <?php if ($company_name) : ?><li><strong><?php _e('Company', 'houses-theme'); ?>:</strong> <?php echo esc_html($company_name); ?></li><?php endif; ?>
                     <?php if ($nationality)  : ?><li><strong><?php _e('Nationality', 'houses-theme'); ?>:</strong> <?php echo esc_html($nationality); ?></li><?php endif; ?>
                     <?php if ($email)        : ?><li><strong><?php _e('Email', 'houses-theme'); ?>:</strong> <a href="mailto:<?php echo esc_attr($email); ?>"><?php echo esc_html($email); ?></a></li><?php endif; ?>
@@ -348,13 +555,14 @@ while (have_posts()) : the_post();
                     <?php if ($preferred_location): ?><li><strong><?php _e('Preferred Location', 'houses-theme'); ?>:</strong> <?php echo esc_html($preferred_location); ?></li><?php endif; ?>
                     <?php if ($family_size)  : ?><li><strong><?php _e('Family Size', 'houses-theme'); ?>:</strong> <?php echo esc_html($family_size); ?></li><?php endif; ?>
                     <?php if ($office_address): ?><li><strong><?php _e('Office Address', 'houses-theme'); ?>:</strong> <?php echo esc_html($office_address); ?></li><?php endif; ?>
-                </ul>
+                </div>
             </div>
 
             <!-- Property Chosen (Lease Details) -->
             <?php if ($lease && $lease_data['property_id'] && $lease_property_details) : ?>
                 <div class="section property-chosen">
-                    <h2><?php _e('Property Chosen (Current Lease)', 'houses-theme'); ?></h2>
+                    <h2 class="accordion-header"><?php _e('Property Chosen (Current Lease)', 'houses-theme'); ?></h2>
+                    <div class="accordion-content">
                     
                     <!-- Lease Information -->
                     <div class="lease-info">
@@ -610,9 +818,6 @@ while (have_posts()) : the_post();
                         
                         <?php if ($lease_property_details['content']) : ?>
                             <div class="property-description">
-                                <h4><?php _e('Description', 'houses-theme'); ?></h4>
-                                <div class="description-content">
-                                    <?php echo wp_kses_post($lease_property_details['content']); ?>
                                 </div>
                             </div>
                         <?php endif; ?>
@@ -622,12 +827,22 @@ while (have_posts()) : the_post();
 
             <!-- Customer House List Properties -->
             <?php if (!empty($house_list_properties)) : ?>
-                <div class="section house-list-properties">
-                    <h2><?php _e('Property Options from House List', 'houses-theme'); ?></h2>
+            <div class="house-list-properties">
+                <h2 class="accordion-header"><?php _e('Property Options from House List', 'houses-theme'); ?></h2>
+                <div class="accordion-content">
                     
                     <?php foreach ($house_list_properties as $property) : ?>
                         <div class="property-card">
-                            <h3><a href="<?php echo esc_url(admin_url('post.php?post=' . $property['id'] . '&action=edit')); ?>" target="_blank" title="Click para editar esta propiedad" style="text-decoration: none; color: inherit; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.color='#0073aa'; this.querySelector('.dashicons').style.opacity='1';" onmouseout="this.style.color='inherit'; this.querySelector('.dashicons').style.opacity='0.7';"><?php echo esc_html($property['title']); ?> <span class="dashicons dashicons-edit" style="font-size: 16px; opacity: 0.7; margin-left: 8px; color: #0073aa;"></span></a></h3>
+                            <h3 class="property-title">
+                                <span class="title-text"><?php echo esc_html($property['title']); ?></span>
+                                <div class="title-actions">
+                                    <a href="<?php echo esc_url(admin_url('post.php?post=' . $property['id'] . '&action=edit')); ?>" target="_blank" title="Editar propiedad" class="edit-link" onclick="event.stopPropagation();">
+                                        <span class="dashicons dashicons-edit"></span>
+                                    </a>
+                                    <span class="accordion-arrow">▼</span>
+                                </div>
+                            </h3>
+                            <div class="property-details">
                             
                             <!-- Property Gallery -->
                             <?php if (!empty($property['gallery_images']) && is_array($property['gallery_images'])) : ?>
@@ -846,15 +1061,18 @@ while (have_posts()) : the_post();
                                     </div>
                                 </div>
                             <?php endif; ?>
+                            </div>
                         </div>
                     <?php endforeach; ?>
                 </div>
+            </div>
             <?php endif; ?>
 
             <!-- Customer House List PDFs -->
             <?php if (!empty($house_lists)) : ?>
                 <div class="section house-list-pdfs">
-                    <h2><?php _e('House List PDFs', 'houses-theme'); ?></h2>
+                    <h2 class="accordion-header"><?php _e('House List PDFs', 'houses-theme'); ?></h2>
+                    <div class="accordion-content">
                     <?php foreach ($house_lists as $house_list) : ?>
                         <?php
                         $generated_pdfs = get_post_meta($house_list->ID, '_generated_pdfs', true);
@@ -895,7 +1113,8 @@ while (have_posts()) : the_post();
 
             <!-- Settling-in Services -->
             <div class="section settling-services">
-                <h2><?php _e('Settling-in Services', 'houses-theme'); ?></h2>
+                <h2 class="accordion-header"><?php _e('Settling-in Services', 'houses-theme'); ?></h2>
+                <div class="accordion-content">
                 <?php if (!empty($settling_services)) : ?>
                     <div class="services-list">
                         <?php foreach ($settling_services as $service) : ?>
@@ -1056,11 +1275,10 @@ while (have_posts()) : the_post();
                 <?php endif; ?>
             </div>
 
-            
-
             <!-- Departure Services -->
             <div class="section departure-services">
-                <h2><?php _e('Departure Services', 'houses-theme'); ?></h2>
+                <h2 class="accordion-header"><?php _e('Departure Services', 'houses-theme'); ?></h2>
+                <div class="accordion-content">
                 <?php if (!empty($departure_services)) : ?>
                     <div class="services-list">
                         <?php foreach ($departure_services as $service) : ?>
