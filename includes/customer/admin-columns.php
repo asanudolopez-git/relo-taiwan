@@ -272,6 +272,56 @@ new Houses_Customer_Admin_Filters();
 
 
 /**
+ * Extend admin search to include External ID, first name, and last name meta fields
+ */
+function houses_extend_customer_search($query) {
+    // Only apply to customer post type in admin
+    if (is_admin() && $query->is_main_query() && $query->get('post_type') === 'customer') {
+        // Only apply when a search is being performed
+        if (!empty($query->get('s'))) {
+            // WordPress already handles post_title search by default
+            // We just need to extend it to include our custom meta fields
+            // Use a custom WHERE clause to search meta fields
+            add_filter('posts_where', 'houses_search_external_id_where', 10, 2);
+        }
+    }
+}
+
+/**
+ * Modify the WHERE clause to include External ID, first name, and last name in search
+ */
+function houses_search_external_id_where($where, $wp_query) {
+    global $wpdb;
+    
+    // Only apply to customer searches in admin
+    if (is_admin() && $wp_query->is_main_query() && $wp_query->get('post_type') === 'customer' && !empty($wp_query->get('s'))) {
+        $search_term = $wp_query->get('s');
+        
+        // Remove the filter to prevent infinite loops
+        remove_filter('posts_where', 'houses_search_external_id_where', 10);
+        
+        // Add OR conditions to search in multiple meta fields
+        $where .= $wpdb->prepare(
+            " OR {$wpdb->posts}.ID IN (
+                SELECT post_id FROM {$wpdb->postmeta} 
+                WHERE (
+                    (meta_key = 'external_id' AND meta_value LIKE %s) OR
+                    (meta_key = 'first_name' AND meta_value LIKE %s) OR
+                    (meta_key = 'last_name' AND meta_value LIKE %s)
+                )
+            )",
+            '%' . $wpdb->esc_like($search_term) . '%',
+            '%' . $wpdb->esc_like($search_term) . '%',
+            '%' . $wpdb->esc_like($search_term) . '%'
+        );
+    }
+    
+    return $where;
+}
+add_action('pre_get_posts', 'houses_extend_customer_search');
+
+
+/**
  * Add custom columns to the Assignee list
  */
 function add_customer_columns($columns)
@@ -280,6 +330,7 @@ function add_customer_columns($columns)
     $new_columns = array(
         'cb' => $columns['cb'], // Keep the checkbox
         'id_name' => __('ID: Name', 'houses-theme'),
+        'external_id' => __('External ID', 'houses-theme'),
         'budget' => __('Budget', 'houses-theme'),
         'company' => __('Company', 'houses-theme'),
         'assignment_period' => __('Assignment Period', 'houses-theme'),
@@ -302,6 +353,12 @@ function display_customer_columns($column, $post_id)
         case 'id_name':
             // Display ID: Name format
             echo '<strong>' . $post_id . ':</strong> ' . get_the_title($post_id);
+            break;
+
+        case 'external_id':
+            // Get external ID from meta field
+            $external_id = get_post_meta($post_id, 'external_id', true);
+            echo esc_html($external_id);
             break;
 
         case 'company':

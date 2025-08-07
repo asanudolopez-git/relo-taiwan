@@ -45,6 +45,11 @@ class Houses_Client_Meta_Boxes
                     'type' => 'text',
                     'class' => '',
                 ),
+                'external_id' => array(
+                    'label' => 'External ID',
+                    'type' => 'text',
+                    'class' => '',
+                ),
                 'nationality' => array(
                     'label' => 'Nationality',
                     'type' => 'text',
