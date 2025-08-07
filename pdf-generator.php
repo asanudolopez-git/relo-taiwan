@@ -144,7 +144,7 @@ function generate_customer_house_list_pdf() {
             // Rent cell (rowspan=2)
             $property_html .= '<td rowspan="2" style="width:25%; border:1px solid #000; text-align:center; vertical-align:middle; padding:8px;">';
             $property_html .= '<div style="font-size:16px;">Rent 月租金</div>';
-            $property_html .= '<div style="font-size:24px; color:#c81018; font-weight:bold; margin:8px 0;">NT$' . number_format((float)$fields['price']) . '</div>';
+            $property_html .= '<div style="font-size:24px; color:#c81018; font-weight:bold; margin:8px 0;">NT$' . number_format((float)$fields['rent']) . '</div>';
             $property_html .= '<div style="font-size:11px; color:#c81018;">(taxes & mgmt fee included)</div>';
             $property_html .= '</td>';
             $property_html .= '</tr>';
@@ -218,7 +218,11 @@ function generate_customer_house_list_pdf() {
                                 $img_src = 'data:image/' . $img_type . ';base64,' . $img_data;
                                 
                                 // Tamaño fijo optimizado para A4
-                                $property_html .= '<img src="' . $img_src . '" style="width:440px; height:320px;" />';
+                                $property_html .= '<img src="' . $img_src . '" style="width:440px; height:320px; padding-bottom:8px;';
+                                if (($col + 1) % 3 != 0) {
+                                    $property_html .= ' padding-right:8px;';
+                                }
+                                $property_html .= '" />';
                             } elseif ($img_url) {
                                 $property_html .= '<img src="' . esc_url($img_url) . '" style="width:220px; height:140px;" />';
                             }
@@ -387,7 +391,7 @@ function generate_customer_house_list_pdf_noimg() {
                     <td style="border:1px solid #000;padding:4px;"> <?= esc_html(get_the_title($property_id)) ?> </td>
                     <td style="border:1px solid #000;padding:4px;"> <?= esc_html(get_the_title($fields['district'])) ?> </td>
                     <td style="border:1px solid #000;padding:4px;"> <?= esc_html($fields['address']) ?> </td>
-                    <td style="border:1px solid #000;padding:4px;color:#c81018;font-weight:bold;">NT$<?= number_format((float)$fields['price']) ?></td>
+                    <td style="border:1px solid #000;padding:4px;color:#c81018;font-weight:bold;">NT$<?= number_format((float)$fields['rent']) ?></td>
                     <td style="border:1px solid #000;padding:4px;"> <?= esc_html($fields['ping']) ?>/<?= esc_html($fields['square_meters']) ?> </td>
                     <td style="border:1px solid #000;padding:4px;"> <?php 
                         $floor = !empty($fields['floor']) ? $fields['floor'] : '';
