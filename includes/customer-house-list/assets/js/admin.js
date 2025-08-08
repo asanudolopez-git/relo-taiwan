@@ -98,4 +98,90 @@ jQuery(document).ready(function($) {
             stationSelect.data('selected-value', selectedValue);
         }
     });
+
+    // Convert server UTC datetimes in the Generated PDFs table to the browser's local time
+    function convertPdfDateTimesToLocal() {
+        // Helper functions
+        function pad(n) { 
+            return (n < 10 ? '0' : '') + n; 
+        }
+        
+        function parseUtcString(dateStr) {
+            if (!dateStr) {
+                console.warn('No date string provided');
+                return null;
+            }
+            
+            // The date is stored as 'YYYY-MM-DD HH:mm:ss' in UTC
+            // We need to convert it to a proper ISO format for JavaScript Date
+            var cleaned = String(dateStr).trim();
+            
+            // Replace space with 'T' to make it ISO-compliant
+            var isoString = cleaned.replace(' ', 'T');
+            
+            // Add 'Z' to indicate UTC if not already present
+            if (!isoString.endsWith('Z') && !isoString.match(/[+-]\d{2}:\d{2}$/)) {
+                isoString += 'Z';
+            }
+            
+            console.log('Parsing UTC date:', dateStr, '->', isoString);
+            
+            var date = new Date(isoString);
+            
+            if (isNaN(date.getTime())) {
+                console.error('Failed to parse date:', dateStr);
+                return null;
+            }
+            
+            console.log('Parsed date object:', date, 'Local:', date.toString());
+            return date;
+        }
+        
+        function formatDateLocal(date) {
+            var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                         'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            return months[date.getMonth()] + ' ' + 
+                   pad(date.getDate()) + ', ' + 
+                   date.getFullYear();
+        }
+        
+        function formatTimeLocal(date) {
+            return pad(date.getHours()) + ':' + pad(date.getMinutes());
+        }
+        
+        // Process all date elements
+        $('.pdf-local-date').each(function() {
+            var $elem = $(this);
+            var utcDateStr = $elem.attr('data-utc');
+            console.log('Processing date element with UTC:', utcDateStr);
+            
+            var localDate = parseUtcString(utcDateStr);
+            if (localDate) {
+                var formattedDate = formatDateLocal(localDate);
+                console.log('Setting date to:', formattedDate);
+                $elem.text(formattedDate);
+            }
+        });
+        
+        // Process all time elements
+        $('.pdf-local-time').each(function() {
+            var $elem = $(this);
+            var utcDateStr = $elem.attr('data-utc');
+            console.log('Processing time element with UTC:', utcDateStr);
+            
+            var localDate = parseUtcString(utcDateStr);
+            if (localDate) {
+                var formattedTime = formatTimeLocal(localDate);
+                console.log('Setting time to:', formattedTime);
+                $elem.text(formattedTime);
+            }
+        });
+    }
+    
+    // Run the conversion when the page is ready
+    // Use setTimeout to ensure DOM is fully loaded
+    setTimeout(function() {
+        console.log('Running PDF datetime conversion...');
+        convertPdfDateTimesToLocal();
+    }, 100);
 });

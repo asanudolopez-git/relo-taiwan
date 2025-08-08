@@ -692,7 +692,7 @@ class Houses_Client_House_List_Meta_Boxes {
             'houses-customer-house-list',
             get_template_directory_uri() . '/includes/customer-house-list/assets/js/admin.js',
             array('jquery'),
-            '1.0.0',
+            time(), // Force cache refresh
             true
         );
 
@@ -758,8 +758,8 @@ class Houses_Client_House_List_Meta_Boxes {
             echo '</td>';
             echo '<td style="padding: 15px; vertical-align: middle;">';
             echo '<div style="line-height: 1.4;">';
-            echo '<strong>' . esc_html($date_display) . '</strong><br>';
-            echo '<small style="color: #666;">' . esc_html($time_display) . '</small>';
+            echo '<strong class="pdf-local-date" data-utc="' . esc_attr($pdf['date_created']) . '">' . esc_html($date_display) . '</strong><br>';
+            echo '<small class="pdf-local-time" data-utc="' . esc_attr($pdf['date_created']) . '" style="color: #666;">' . esc_html($time_display) . '</small>';
             echo '</div>';
             echo '</td>';
             echo '<td style="padding: 15px; vertical-align: middle;">';
@@ -776,6 +776,59 @@ class Houses_Client_House_List_Meta_Boxes {
         echo '</tbody>';
         echo '</table>';
         echo '</div>';
+        
+        // Add inline JavaScript to convert UTC times to local
+        echo '<script type="text/javascript">
+        jQuery(document).ready(function($) {
+            // Helper function to pad numbers
+            function pad(n) {
+                return (n < 10 ? "0" : "") + n;
+            }
+            
+            // Convert UTC dates to local time
+            function convertToLocal() {
+                $(".pdf-local-date").each(function() {
+                    var utcStr = $(this).attr("data-utc");
+                    if (utcStr && utcStr.length > 0) {
+                        // Parse the UTC date string (format: YYYY-MM-DD HH:MM:SS)
+                        // Convert to ISO format and add Z for UTC
+                        var isoStr = utcStr.replace(" ", "T") + "Z";
+                        var utcDate = new Date(isoStr);
+                        
+                        if (!isNaN(utcDate.getTime())) {
+                            // Format date as "MMM DD, YYYY"
+                            var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+                                         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                            var localDateStr = months[utcDate.getMonth()] + " " + 
+                                             pad(utcDate.getDate()) + ", " + 
+                                             utcDate.getFullYear();
+                            $(this).text(localDateStr);
+                        }
+                    }
+                });
+                
+                $(".pdf-local-time").each(function() {
+                    var utcStr = $(this).attr("data-utc");
+                    if (utcStr && utcStr.length > 0) {
+                        // Parse the UTC date string (format: YYYY-MM-DD HH:MM:SS)
+                        // Convert to ISO format and add Z for UTC
+                        var isoStr = utcStr.replace(" ", "T") + "Z";
+                        var utcDate = new Date(isoStr);
+                        
+                        if (!isNaN(utcDate.getTime())) {
+                            // Format time as "HH:MM" in local timezone
+                            var localTimeStr = pad(utcDate.getHours()) + ":" + 
+                                             pad(utcDate.getMinutes());
+                            $(this).text(localTimeStr);
+                        }
+                    }
+                });
+            }
+            
+            // Run conversion
+            convertToLocal();
+        });
+        </script>';
         
         // Add summary info
         $total_pdfs = count($generated_pdfs);
