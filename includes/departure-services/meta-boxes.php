@@ -20,8 +20,8 @@ class Houses_Departure_Services_Meta_Boxes {
         'basic_info' => array(
             'title' => 'Departure Service Details',
             'fields' => array(
-                'customer_id' => array(
-                    'label' => 'Client',
+                'client_lease_id' => array(
+                    'label' => 'Lease',
                     'type' => 'select',
                     'options' => array(), // Will be populated in constructor
                     'class' => 'full-width',
@@ -112,11 +112,12 @@ class Houses_Departure_Services_Meta_Boxes {
      */
     public function __construct() {
         // Initialize the select options
-        $this->fields['basic_info']['fields']['customer_id']['options'] = $this->get_customers_options();
+        $this->fields['basic_info']['fields']['client_lease_id']['options'] = $this->get_client_leases_options();
         
         // Register meta boxes
         add_action('add_meta_boxes', array($this, 'register_meta_boxes'));
-        add_action('wp_ajax_get_property_details', array($this, 'ajax_get_property_details'));
+        add_action('wp_ajax_get_lease_property_details', array($this, 'ajax_get_lease_property_details'));
+        add_action('wp_ajax_nopriv_get_lease_property_details', array($this, 'ajax_get_lease_property_details'));
         add_action('save_post', array($this, 'save_meta_boxes'));
         
         // Enqueue scripts and styles
@@ -137,7 +138,7 @@ class Houses_Departure_Services_Meta_Boxes {
                     'departure-service-admin',
                     get_template_directory_uri() . '/includes/departure-services/assets/js/admin.js',
                     array('jquery'),
-                    '1.0.0',
+                    '1.0.1',
                     true
                 );
                 wp_localize_script('departure-service-admin', 'departure_service_data', array(
@@ -457,6 +458,62 @@ class Houses_Departure_Services_Meta_Boxes {
         }
         
         echo '</div>';
+        
+        // Add inline script for debugging
+        ?>
+        <script type="text/javascript">
+        jQuery(document).ready(function($) {
+            console.log('Inline script loaded for departure services');
+            
+            // Find the lease select field
+            var $leaseSelect = $('#client_lease_id');
+            var $propertyDisplay = $('#property_display');
+            var $propertyHidden = $('#property_id_hidden');
+            
+            console.log('Found elements:', {
+                lease: $leaseSelect.length,
+                display: $propertyDisplay.length, 
+                hidden: $propertyHidden.length
+            });
+            
+            $leaseSelect.on('change', function() {
+                var leaseId = $(this).val();
+                console.log('Lease changed to:', leaseId);
+                
+                if (!leaseId) {
+                    $propertyDisplay.val('');
+                    $propertyHidden.val('');
+                    return;
+                }
+                
+                $propertyDisplay.val('Loading...');
+                
+                $.ajax({
+                    url: ajaxurl,
+                    type: 'POST',
+                    data: {
+                        action: 'get_lease_property_details',
+                        lease_id: leaseId,
+                        nonce: '<?php echo wp_create_nonce('departure_service_nonce'); ?>'
+                    },
+                    success: function(response) {
+                        console.log('Response:', response);
+                        if (response.success) {
+                            $propertyDisplay.val(response.data.details);
+                            $propertyHidden.val(response.data.property_id);
+                        } else {
+                            $propertyDisplay.val('Error: ' + response.data.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('AJAX Error:', error);
+                        $propertyDisplay.val('AJAX Error: ' + error);
+                    }
+                });
+            });
+        });
+        </script>
+        <?php
     }
 
     /**
@@ -498,31 +555,25 @@ class Houses_Departure_Services_Meta_Boxes {
     }
 
     /**
-     * AJAX handler: return detailed property info for selected client
+     * AJAX handler: return detailed property info for selected lease
      */
-    public function ajax_get_property_details() {
+    public function ajax_get_lease_property_details() {
+        error_log('AJAX handler called: ajax_get_lease_property_details');
+        error_log('POST data: ' . print_r($_POST, true));
+        
         // Verify nonce
         if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'departure_service_nonce')) {
+            error_log('Nonce verification failed');
             wp_send_json_error(array('message' => 'Security check failed'));
         }
-        $client_id = isset($_POST['client_id']) ? intval($_POST['client_id']) : 0;
-        if (!$client_id) {
-            wp_send_json_error(array('message' => 'Invalid client') );
+        $lease_id = isset($_POST['lease_id']) ? intval($_POST['lease_id']) : 0;
+        error_log('Lease ID: ' . $lease_id);
+        if (!$lease_id) {
+            error_log('Invalid lease ID');
+            wp_send_json_error(array('message' => 'Invalid lease') );
         }
-        // Get latest client_lease for this client
-        $leases = get_posts(array(
-            'post_type'      => 'client_lease',
-            'meta_key'       => 'client_id',
-            'meta_value'     => $client_id,
-            'posts_per_page' => 1,
-            'orderby'        => 'date',
-            'order'          => 'DESC',
-            'fields'         => 'ids',
-        ));
-        if (empty($leases)) {
-            wp_send_json_error(array('message' => 'No lease found for client') );
-        }
-        $lease_id    = $leases[0];
+        
+        // Get property ID from the lease
         $property_id = get_post_meta($lease_id, 'property_id_hidden', true);
         if (!$property_id) {
             wp_send_json_error(array('message' => 'No property associated to lease') );
@@ -555,49 +606,52 @@ class Houses_Departure_Services_Meta_Boxes {
     }
 
     /**
-     * Get customers for select options
+     * Get client leases for select options
      */
-    public function get_customers_options() {
-        $options = array('' => __('Select Client', 'houses-theme'));
+    public function get_client_leases_options() {
+        $options = array('' => __('Select Lease', 'houses-theme'));
         
-        // Get all customer IDs that have a client_lease
-        $customers_with_lease = array();
-        
-        // Find all client_lease posts
+        // Get all client_lease posts
         $leases = get_posts(array(
             'post_type' => 'client_lease',
             'posts_per_page' => -1,
-            'fields' => 'ids',
+            'orderby' => 'date',
+            'order' => 'DESC',
         ));
         
-        // Collect all customer IDs from these leases
-        foreach ($leases as $lease_id) {
-            $client_id = get_post_meta($lease_id, 'client_id', true);
-            if (!empty($client_id)) {
-                $customers_with_lease[] = $client_id;
-            }
-        }
-        
-        // If no customers with leases found, return empty options
-        if (empty($customers_with_lease)) {
-            return $options;
-        }
-        
-        // Get customers that have a lease
-        $customers = get_posts(array(
-            'post_type' => 'customer',
-            'posts_per_page' => -1,
-            'orderby' => 'title',
-            'order' => 'ASC',
-            'post__in' => $customers_with_lease,
-        ));
-        
-        foreach ($customers as $customer) {
-            $first_name = get_post_meta($customer->ID, 'first_name', true);
-            $last_name = get_post_meta($customer->ID, 'last_name', true);
-            $display_name = $first_name && $last_name ? $first_name . ' ' . $last_name : $customer->post_title;
+        foreach ($leases as $lease) {
+            $client_id = get_post_meta($lease->ID, 'client_id', true);
+            $property_id = get_post_meta($lease->ID, 'property_id_hidden', true);
             
-            $options[$customer->ID] = $display_name;
+            // Get client name
+            $client_name = '';
+            if ($client_id) {
+                $client_post = get_post($client_id);
+                if ($client_post) {
+                    $first_name = get_post_meta($client_id, 'first_name', true);
+                    $last_name = get_post_meta($client_id, 'last_name', true);
+                    $client_name = $first_name && $last_name ? $first_name . ' ' . $last_name : $client_post->post_title;
+                }
+            }
+            
+            // Get property name
+            $property_name = '';
+            if ($property_id) {
+                $property_post = get_post($property_id);
+                if ($property_post) {
+                    $property_name = $property_post->post_title;
+                }
+            }
+            
+            // Create display name
+            $display_name = $lease->post_title;
+            if ($client_name && $property_name) {
+                $display_name = $client_name . ' - ' . $property_name;
+            } elseif ($client_name) {
+                $display_name = $client_name . ' - Lease #' . $lease->ID;
+            }
+            
+            $options[$lease->ID] = $display_name;
         }
         
         return $options;
@@ -659,6 +713,10 @@ class Houses_Departure_Services_Meta_Boxes {
                 echo '<div class="checkbox-field">';
                 echo '<input type="checkbox" id="' . esc_attr($field['id']) . '" name="' . esc_attr($field['id']) . '" value="1" ' . checked($value, '1', false) . '>';
                 echo '</div>';
+                break;
+                
+            case 'hidden':
+                echo '<input type="hidden" id="' . esc_attr($field['id']) . '" name="' . esc_attr($field['id']) . '" value="' . esc_attr($value) . '">';
                 break;
                 
             default:

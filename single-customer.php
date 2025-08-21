@@ -581,9 +581,10 @@ while (have_posts()) : the_post();
         'posts_per_page' => -1,
         'meta_query'     => array(
             array(
-                'key'     => 'customer_id',
-                'value'   => $customer_id,
-                'compare' => '='
+                'key'     => 'client_lease_id',
+                'value'   => $lease_id,
+                'compare' => '=',
+                'type'    => 'NUMERIC'
             ),
         ),
         'post_status'    => 'publish',
