@@ -392,7 +392,8 @@ function remove_admin_menu_items() {
             'edit.php?post_type=departure_service',        // Assignee (Agents)
             'edit.php?post_type=accommodation',        // Assignee (Agents)
             'edit.php?post_type=customer',        // Assignee (Agents)
-            'edit.php?post_type=client_lease' // Lease Template
+            'edit.php?post_type=client_lease', // Lease Template
+            'edit.php?post_type=lease_template' // Lease Template
         );
         
         // Get the global menu array
